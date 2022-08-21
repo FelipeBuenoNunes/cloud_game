@@ -5,7 +5,7 @@ interface logginAttempts {
     readonly timeAttempts: number[]
 }
 
-class LogginAttempts {
+export default class LogginAttempts {
     private countAttempts: number;
     private blockedTimeSeconds: number;
     private blockedUntilDate: number;
@@ -52,8 +52,8 @@ class LogginAttempts {
     incorrectPasswordIsLocked() {
         this.countAttempts++;
         this.timeAttempts.push(Date.now());
-
-        if (this.countAttempts > 4) {
+        console.log(this.countAttempts)
+        if (this.countAttempts >= 3) {
             if (this.blockedTimeSeconds > 0) {
                 this.blockedTimeSeconds *= 2;
             }
