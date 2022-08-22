@@ -1,10 +1,3 @@
-interface logginAttempts {
-    readonly countAttempts: number
-    readonly blockedTimeSeconds: number
-    readonly blockedUntilDate: number
-    readonly timeAttempts: number[]
-}
-
 export default class LogginAttempts {
     private countAttempts: number;
     private blockedTimeSeconds: number;
