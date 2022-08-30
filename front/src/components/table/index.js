@@ -1,7 +1,7 @@
 const Table = () => {
   return (
     <>
-      <div className="bg-greenBJ w-screen h-screen text-red-500">opa</div>
+      <div className="bg-boardMobile bg-no-repeat bg-cover bg-center w-full h-full md:bg-boardDesktop "></div>
     </>
   );
 };

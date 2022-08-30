@@ -6,9 +6,12 @@ module.exports = {
       colors: {
         greenBJ: "#09783B",
       },
-      backgroundImage: (theme) => ({
-        "hero-pattern": "url('/assets/fundo-game.png')",
-      }),
+      backgroundImage: {
+        boardMobile: "url('assets/bg-game-mobile.png')",
+        boardDesktop: "url('assets/bg-game-desktop.png')",
+        baseCard: "url('assets/bg-card.png')",
+        baseBackCard: "url('assets/bg-back-card.png')",
+      },
     },
   },
   plugins: [],
