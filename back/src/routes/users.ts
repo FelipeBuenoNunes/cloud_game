@@ -1,9 +1,10 @@
 import { Request, Response, Router } from "express";
+import { getMessage } from "../controller/user/index";
 
 const router = Router();
 
-router.get("/user", (req: Request, res: Response) => {
-    res.send("Hello, world!")
-})
+//router.post("/new-user")
+//router.post("/login")
+router.get("/get-message", new getMessage().handler.bind(new getMessage()))
 
 export default router;
