@@ -4,7 +4,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        greenBJ: "#09783B",
+        BJgreen: "#09783B",
+        BJblack: "#222",
+        BJwhite: "#eee",
       },
       backgroundImage: {
         boardMobile: "url('assets/bg-game-mobile.png')",
