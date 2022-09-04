@@ -1,5 +1,7 @@
 import dotenv from "dotenv"
+
 dotenv.config();
+
 export default class getMessageService {
 
     public createMessage(): string{
