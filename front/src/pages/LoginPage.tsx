@@ -4,10 +4,7 @@ import { ethers } from 'ethers';
 import { doSignInBackend, doSignOutBackend, doSignUpBackend, getProfileBackend } from './AppService.js';
 // import { useNavigate } from 'react-router-dom';
 
-export default function LoginPage () {
-
-  // const SECRET : string = process.env.SECRET ?? 'ha';
-  const SECRET = 'ha';
+export default function LoginPage() {
 
   // const navigate = useNavigate(); // depois use algo como navigate(/home);
 
@@ -23,12 +20,17 @@ export default function LoginPage () {
     if (address) doSignIn();
   }, []);
 
-  async function connect(): Promise<void | { user: string; secret: string; }> {
+  async function connect(): Promise<void | { user: string; secret: string; userName: string; }> {
+    const response = await fetch('http://localhost:8081/get-message');
+    const message = await response.json();
+    const SECRET = message.data;
+    // TODO adicionar campo de nome de usuário no front . Estamos com o userName da resposta hardcoded
+
     setError('');
 
     if (!window.ethereum) return setError('No MetaMask found!');
 
-    const provider = new ethers.providers.Web3Provider(( window ).ethereum);
+    const provider = new ethers.providers.Web3Provider((window).ethereum);
     const accounts = await provider.send('eth_requestAccounts', []);
     if (!accounts || !accounts.length) return setError('Wallet not found/allowed!');
 
@@ -39,7 +41,7 @@ export default function LoginPage () {
     const signer = provider.getSigner();
     const secret = await signer.signMessage(SECRET);
 
-    return { user: accounts[0], secret };
+    return { user: accounts[0], secret, userName: 'hugo' };
   }
 
   async function loadProfile(token: string) {
@@ -49,12 +51,21 @@ export default function LoginPage () {
 
   function doSignUp() {
     connect()
-      .then(credentials => doSignUpBackend(credentials))
-      .then(result => {
-        console.log('oi' + result);
-        localStorage.setItem('token', result.token);
-      })
-      .catch(err => setError(err.message));
+      .then(credentials => {
+        fetch('http://localhost:8081/new-user', {
+          method: 'POST',
+          body: JSON.stringify(credentials),
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        })
+          .then(res => res.json())
+          .then(result => {
+            console.log(result);
+            // localStorage.setItem('token', result.token);
+          })
+          .catch(err => setError(err.message));
+      });
   }
 
   function doSignIn() {
