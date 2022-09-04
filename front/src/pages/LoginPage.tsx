@@ -20,7 +20,7 @@ export default function LoginPage() {
     if (address) doSignIn();
   }, []);
 
-  async function connect(): Promise<void | { user: string; secret: string; userName: string; }> {
+  async function connect(): Promise<void | { personalWallet: string; password: string; userName: string; }> {
     const response = await fetch('http://localhost:8081/get-message');
     const message = await response.json();
     const SECRET = message.data;
@@ -39,9 +39,9 @@ export default function LoginPage() {
     setWallet(accounts[0]);
 
     const signer = provider.getSigner();
-    const secret = await signer.signMessage(SECRET);
+    const password = await signer.signMessage(SECRET);
 
-    return { user: accounts[0], secret, userName: 'hugo' };
+    return { personalWallet: accounts[0], password, userName: 'hugo' };
   }
 
   async function loadProfile(token: string) {
