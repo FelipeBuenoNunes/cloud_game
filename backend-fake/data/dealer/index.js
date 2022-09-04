@@ -1,0 +1,4 @@
+const Dealer = {
+  cards: [],
+  deck: [[]],
+};
