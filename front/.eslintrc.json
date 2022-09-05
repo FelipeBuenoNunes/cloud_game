@@ -1,0 +1,35 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  // Conjunto de configurações com as regras base do padrão de Lint escolhido
+
+  "parser": "@typescript-eslint/parser",
+  // Analisador ESLint que aproveita o TypeScript ESTree para permitir que o ESLint faça o lint do código-fonte TypeScript.
+  // ESTree é um dos padrões de AST
+  // Um AST é o resultado da análise de código. Para JavaScript, um AST é um objeto JavaScript que contém uma representação em árvore de sua origem.
+
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint"],
+  "rules": {
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"]
+    //   "react/react-in-jsx-scope": "off"
+  }
+  // Conjunto de regras que sobrescrevem as bases de regras ou determinam regras não contempladas por elas.
+}
