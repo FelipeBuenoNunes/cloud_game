@@ -30,6 +30,15 @@ services:
     networks:
       - app-network
 
+  redisdb_pachinko:
+    container_name: redisdb_pachinko
+    image: redis:7.0.4-alpine
+    restart: always
+    ports:
+      - "6380:6379"
+    networks:
+      - app-network
+
 # volumes:
 #     db-data:
 #     pgadmin-data:
