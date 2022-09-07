@@ -73,10 +73,21 @@ export default function LoginPage() {
 
   function doSignIn() {
     connect()
-      .then(credentials => doSignInBackend(credentials))
-      .then(result => {
-        localStorage.setItem('token', result.token);
-        loadProfile(result.token);
+      .then(credentials => {
+        console.log(credentials);
+        fetch('http://localhost:8081/login', {
+          method: 'POST',
+          credentials: 'include',
+          body: JSON.stringify(credentials),
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        })
+          .then(res => res.json())
+          .then(result => {
+            console.log(result);
+            // localStorage.setItem('token', result.token);
+          });
       })
       .catch(err => setError(err.message));
   }

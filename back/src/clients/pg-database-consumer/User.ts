@@ -32,4 +32,22 @@ export class UserDbConsumer {
         }
     }
 
+    public async find(): Promise<string>{
+        try {
+            await Users.findOneBy({
+                user_side_public_key: this.user.user_side_public_key
+            })
+            console.log('success')
+            return 'sucesso no find'
+        }catch(e: any) {
+            console.log(e)
+            // if(e.code === '23505') {
+            //     throw UserAlreadyExists
+            // }
+            
+            return "error"
+        }
+    }
+
+
 }
