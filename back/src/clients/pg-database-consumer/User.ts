@@ -22,7 +22,7 @@ export class UserDbConsumer {
     public async insert(): Promise<string>{
         try {
             await this.user.save()
-            return this.user.id
+            return this.user.user_side_public_key
         }catch(e: any) {
             if(e.code === '23505') {
                 throw UserAlreadyExists

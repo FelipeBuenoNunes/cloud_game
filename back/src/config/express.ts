@@ -5,7 +5,12 @@ import { errorDefault } from "./http/middleware/errorDefault";
 
 const app = express();
 
-app.use(cors());
+const corsConfiguration = {
+    "origin": "http://localhost:3000",
+    "credentials": true
+}
+
+app.use(cors(corsConfiguration));
 app.use(express.json());
 app.use(router);
 app.use(errorDefault) 
