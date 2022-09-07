@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { apiResponse } from "../../models";
+import { getMessageResponse } from "../../models";
 import getMessageService from "../../service/user/getMessageService"
 
 export default class getMessage {
@@ -8,9 +8,8 @@ export default class getMessage {
         const service = new this.service();
         const responseData = service.createMessage();
         
-        const response: apiResponse = {
-            data: responseData,
-            message: new Array()
+        const response: getMessageResponse = {
+            data: responseData
         }
         res.json(response)
     }
