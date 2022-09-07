@@ -16,7 +16,9 @@ export default class newUserService {
             wallet_public_key: newWallet.public,
             wallet_private_key: newWallet.private
         }
-        if (await new UserDbConsumer(newUser).insert()) return "Success"
+
+        const createdUser = await new UserDbConsumer(newUser).insert();
+        if ( createdUser !== "error") return createdUser;
         return "error"
     }
 

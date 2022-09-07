@@ -19,15 +19,16 @@ export class UserDbConsumer {
         this.user = newUser;
     }
 
-    public async insert(): Promise<boolean>{
+    public async insert(): Promise<string>{
         try {
-            return (await this.user.save()).hasId()
+            await this.user.save()
+            return this.user.id
         }catch(e: any) {
             if(e.code === '23505') {
                 throw UserAlreadyExists
             }
             
-            return false
+            return "error"
         }
     }
 
