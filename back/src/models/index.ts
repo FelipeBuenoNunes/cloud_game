@@ -1,7 +1,7 @@
-import { getMessageResponse } from "./getMessage";
-import { apiResponse } from "./apiResponse";
+import { getMessageResponse } from "./responses/getMessage";
+import { apiResponseError } from "./errors/apiResponseError";
 
 export {
     getMessageResponse,
-    apiResponse
+    apiResponseError
 }

@@ -1,5 +1,5 @@
 interface getMessageResponse {
-    message: string
+    data: string
 }
 
 export { getMessageResponse }

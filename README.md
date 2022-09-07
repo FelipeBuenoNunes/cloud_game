@@ -20,6 +20,10 @@ PGADMIN_DEFAULT_EMAIL
 PGADMIN_DEFAULT_PASSWORD
 PGADMIN_LISTEN_PORT
 
+> tip:
+Run the following command to connect to the database with psql
+```docker exec -it postgres pachinko psql -d "your name db" -U "your user db"```
+
 3 - on /back run:
 
 yarn install

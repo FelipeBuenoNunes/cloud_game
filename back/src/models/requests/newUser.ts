@@ -1,7 +1,5 @@
-interface newUserData {
+export interface newUserData {
     personalWallet:string,
     password: string,
     userName: string,
 }
-
-export { newUserData }
