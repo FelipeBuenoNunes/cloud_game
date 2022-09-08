@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.1.8 | MIT License | https://tailwindcss.com
+! tailwindcss v3.1.5 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -549,30 +549,61 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.flex {
+  display: flex;
+}
+
 .h-screen {
   height: 100vh;
+}
+
+.h-full {
+  height: 100%;
 }
 
 .w-screen {
   width: 100vw;
 }
 
-.bg-blue-700 {
+.w-full {
+  width: 100%;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.items-start {
+  align-items: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.bg-BJblack {
   --tw-bg-opacity: 1;
-  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
+  background-color: rgb(34 34 34 / var(--tw-bg-opacity));
 }
 
-.bg-greenBJ {
-  --tw-bg-opacity: 1;
-  background-color: rgb(9 120 59 / var(--tw-bg-opacity));
+.bg-boardMobile {
+  background-image: url('assets/bg-game-mobile.png');
 }
 
-.text-red-500 {
-  --tw-text-opacity: 1;
-  color: rgb(239 68 68 / var(--tw-text-opacity));
+.bg-cover {
+  background-size: cover;
 }
 
-.text-greenBJ {
-  --tw-text-opacity: 1;
-  color: rgb(9 120 59 / var(--tw-text-opacity));
+.bg-center {
+  background-position: center;
+}
+
+.bg-no-repeat {
+  background-repeat: no-repeat;
+}
+
+@media (min-width: 768px) {
+  .md\:bg-boardDesktop {
+    background-image: url('assets/bg-game-desktop.png');
+  }
 }
