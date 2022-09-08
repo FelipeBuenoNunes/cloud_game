@@ -1,15 +1,15 @@
-// import SinglePlayer from "./elements/SinglePlayer";
 import SinglePlayer from "../singlePlayer";
+import img from '../../assets/bg-game-desktop.png'
 
 const ContainerPlayer = (props) => {
   return (
-    <div className={`bg-blue-500 w-full p-4 flex flex-col justify-end items-stretch ${props.className}`}>
+    <section style={{  backgroundImage:`../../assets/bg-game-mobile.png` }} className={` w-full p-4 flex flex-col justify-end items-stretch ${props.className}`}>
       <div>
         <div className="flex flex-row justify-between items-center">
           <SinglePlayer />
           <SinglePlayer />
         </div>
-        <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row justify-between items-center md:mx-[15%] mt-4">
           <SinglePlayer />
           <SinglePlayer />
         </div>
@@ -18,7 +18,7 @@ const ContainerPlayer = (props) => {
       <div className="flex flex-row justify-center items-center">
         <SinglePlayer />
       </div>
-    </div>
+    </section>
   );
 };
 
