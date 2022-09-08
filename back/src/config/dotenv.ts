@@ -9,7 +9,9 @@ const config = {
     POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
     POSTGRES_DB: process.env.POSTGRES_DB,
     POSTGRES_PORT: parseInt(process.env.POSTGRES_PORT!),
-    POSTGRES_HOST: 'localhost'
+    POSTGRES_HOST: 'localhost',
+    REDIS_URL: process.env.REDIS_URL,
+    REDIS_PORT: parseInt(process.env.REDIS_PORT!)
 };
 
 export { config };

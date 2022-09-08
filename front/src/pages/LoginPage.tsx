@@ -21,7 +21,9 @@ export default function LoginPage() {
   }, []);
 
   async function connect(): Promise<void | { personalWallet: string; password: string; userName: string; }> {
-    const response = await fetch('http://localhost:8081/get-message');
+    const response = await fetch('http://localhost:8081/get-message',{
+      credentials: 'include',
+    });
     const message = await response.json();
     const SECRET = message.data;
     // TODO adicionar campo de nome de usuário no front . Estamos com o userName da resposta hardcoded
@@ -54,6 +56,7 @@ export default function LoginPage() {
       .then(credentials => {
         fetch('http://localhost:8081/new-user', {
           method: 'POST',
+          credentials: 'include',
           body: JSON.stringify(credentials),
           headers: new Headers({
             'Content-Type': 'application/json'

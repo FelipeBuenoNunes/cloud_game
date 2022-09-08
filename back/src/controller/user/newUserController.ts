@@ -1,44 +1,28 @@
-import { Request, Response } from "express";
-import { apiResponse } from "../../models";
-import {newUserData} from '../../models/userData'
-import newUser from '../../service/user/newUserService'
+import { NextFunction, Request, Response } from "express";
+import { apiResponseError } from "../../models";
+import { UnspecifiedError } from "../../models/errors/server";
+import { newUserData } from '../../models/requests/newUser';
+import newUser from '../../service/user/newUserService';
+import sessionControls from '../../service/user/sessionServices'
 
 
 export default class createUser {
-    //private service
-    public async handler(req: Request, res: Response) {
-        const newUserData: newUserData = req.body;
-        console.log(newUserData);
+    public async handler(req: Request, res: Response, next: NextFunction) {
+        try {
+            const newUserData: newUserData = req.body;
+            const userManipulator = new newUser();
+            const newUserSuccess = await userManipulator.insertUser(newUserData);
 
-        const userManipulator = new newUser();
-        const userExist = await userManipulator.checkUserExistence(newUserData.userName);
+            const sessionManipulation = new sessionControls();
+            const sessionValue = await sessionManipulation.createUserSession(newUserSuccess);
 
-        console.log(userExist);
-
-        if (userExist === true){
+            res.cookie("session", sessionValue)
+            res.type('application/json')
+            res.send(`{"userSideWallet": "${newUserSuccess}"}`)
             
-            const response: apiResponse = {
-                data: {},
-                message: ['user already exists in server']
-            }
-
-            
-            res.status(409)
-            res.json(response)
-
-        } else {
-
-            const newUserId = await userManipulator.insertUser(newUserData);
-        
-            const response: apiResponse = {
-                data: newUserId,
-                message: new Array()
-            }
-            res.json(response)
+        }catch(e) {
+            if(e instanceof apiResponseError) return next(e)
+            next(UnspecifiedError)            
         }
-        //validar o conteúdo do body
-        // const service = new this.service();
-        // const responseData = service.createMessage();
-
     }
 }
