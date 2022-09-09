@@ -19,7 +19,8 @@ export default class newUserService {
 
         const createdUser = await new UserDbConsumer(newUser).insert();
         if ( createdUser !== "error") return createdUser;
-        return "error"
+    
+        throw `error to cadaster user, \n${JSON.stringify(newUser)}`
     }
 
     private async newWallet() {

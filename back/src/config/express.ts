@@ -1,6 +1,7 @@
 import express, { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import router from "../routes/router";
+import cookieParser from "cookie-parser"
 import { errorDefault } from "./http/middleware/errorDefault";
 
 const app = express();

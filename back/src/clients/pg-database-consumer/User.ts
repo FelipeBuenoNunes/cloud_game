@@ -22,12 +22,13 @@ export class UserDbConsumer {
     public async insert(): Promise<string>{
         try {
             await this.user.save()
-            return this.user.user_side_public_key
+            //returns the id to create a session
+            return this.user.id
         }catch(e: any) {
             if(e.code === '23505') {
                 throw UserAlreadyExists
             }
-            
+            //todo error
             return "error"
         }
     }

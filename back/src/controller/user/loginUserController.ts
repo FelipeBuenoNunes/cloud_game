@@ -3,7 +3,7 @@ import { apiResponseError } from "../../models";
 import { UnspecifiedError } from "../../models/errors/server";
 import { newUserData } from '../../models/requests/newUser';
 import findUser from '../../service/user/findUserService';
-import sessionControls from '../../service/user/sessionServices'
+import sessionControls from '../../service/session/sessionServices'
 
 
 export default class login {
