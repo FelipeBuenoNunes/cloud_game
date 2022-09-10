@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { InvalidSession } from "../../../models/errors/client";
 import sessionServices from "../../../service/session/sessionServices";
 
+//type cookie = new Map(string, string)
+
 export class validateSession {
     private cookie?: string;
     private path: string;
@@ -13,24 +15,17 @@ export class validateSession {
         this.path = req.path;
 
         const cookie = req.cookies;
-        if(!this.hasCookie(cookie)) return
-
+        if(!Object.keys(cookie).includes(sessionServices.cookieName)) return this.validateEndpoint()
+        
         this.cookie = cookie[sessionServices.cookieName];
-        if(!this.hasCookie(cookie)) return
-        this.validateCookie();
-        if(!this.obj) return next(InvalidSession)
+        await this.validateCookie();
+        if(!this.obj) return this.validateEndpoint();
         
         return res.send(JSON.stringify(this.obj.get()));
     }
 
-    private hasCookie(cookie: string|undefined = this.cookie): boolean {
-        console.log(cookie);
-        if(cookie) {
-            console.log(this.path);
-            (this.path === "/login") ? this.nextFunction() : this.nextFunction(InvalidSession);
-            return false;
-        }
-        return true;
+    private validateEndpoint() {
+        (this.path === "/login") ? this.nextFunction() : this.nextFunction(InvalidSession);
     }
 
     private async validateCookie() {

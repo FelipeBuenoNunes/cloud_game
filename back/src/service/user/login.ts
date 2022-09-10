@@ -12,12 +12,12 @@ export default class loginService {
     }
 
     public async getUser(): Promise<User> {
-        const currentUser: User = {
+        const currentUser: Partial<User> = {
             password: this.data.password,
             user_side_public_key: this.data.personalWallet
         }
-
-        const user = await new UserDbConsumer(currentUser).find();
+        
+        const user = await UserDbConsumer.find(currentUser);
         if(!user) throw AccountNotRegistred
         return user;
     }
