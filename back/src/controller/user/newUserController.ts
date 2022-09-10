@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { apiResponseError } from "../../models";
 import { UnspecifiedError } from "../../models/errors/server";
 import { newUserData } from '../../models/requests/newUser';
-import newUser from '../../service/user/newUserService';
-import sessionControls from '../../service/user/sessionServices'
+import newUser from '../../service/user/newUser';
+import sessionControls from '../../service/session/sessionServices'
 
 
 export default class createUser {
@@ -11,14 +11,12 @@ export default class createUser {
         try {
             const newUserData: newUserData = req.body;
             const userManipulator = new newUser();
-            const newUserSuccess = await userManipulator.insertUser(newUserData);
+            const newUserID = await userManipulator.insertUser(newUserData);
+            
+            const session = new sessionControls(newUserID);
 
-            const sessionManipulation = new sessionControls();
-            const sessionValue = await sessionManipulation.createUserSession(newUserSuccess);
-
-            res.cookie("session", sessionValue)
-            res.type('application/json')
-            res.send(`{"userSideWallet": "${newUserSuccess}"}`)
+            res.cookie(sessionControls.cookieName, session.getID(), { expires: session.getExpires() })
+            res.send("algum dado aqui...")
             
         }catch(e) {
             if(e instanceof apiResponseError) return next(e)

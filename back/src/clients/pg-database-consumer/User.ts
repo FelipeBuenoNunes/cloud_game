@@ -1,7 +1,8 @@
 import { Users } from "../orm/entity/User"
 import { User } from "../../models/infra/user";
 import { createHash } from "crypto";
-import { UserAlreadyExists } from "../../models/errors/client";
+import { UserAlreadyExists, AccountNotRegistred } from "../../models/errors/client";
+import { apiResponseError } from "../../models";
 
 export class UserDbConsumer {
     private user: Users;
@@ -16,36 +17,33 @@ export class UserDbConsumer {
         newUser.user_side_public_key = user.user_side_public_key;
         newUser.wallet_public_key = user.wallet_public_key;
         newUser.wallet_private_key = user.wallet_private_key;
+
         this.user = newUser;
     }
 
     public async insert(): Promise<string>{
         try {
             await this.user.save()
-            return this.user.user_side_public_key
+            //returns the id to create a session
+            return this.user.id
         }catch(e: any) {
-            if(e.code === '23505') {
-                throw UserAlreadyExists
-            }
+            if(e.code === '23505') throw UserAlreadyExists;
             
-            return "error"
+            throw "Unspecified error";
         }
     }
 
-    public async find(): Promise<string>{
+    public static async find(user: Partial<User>): Promise<User> {
         try {
-            await Users.findOneBy({
-                user_side_public_key: this.user.user_side_public_key
-            })
-            console.log('success')
-            return 'sucesso no find'
+            const db = await Users.findOneBy({
+                user_side_public_key: user.user_side_public_key,
+                password: createHash('sha256').update(user.password!).digest('hex')
+            });
+            if(!db) throw AccountNotRegistred;
+            return db;
         }catch(e: any) {
-            console.log(e)
-            // if(e.code === '23505') {
-            //     throw UserAlreadyExists
-            // }
-            
-            return "error"
+            if(e instanceof apiResponseError) throw e
+            throw "Unspecified error";
         }
     }
 

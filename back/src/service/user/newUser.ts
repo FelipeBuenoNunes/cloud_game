@@ -2,8 +2,6 @@ import { UserDbConsumer } from '../../clients/pg-database-consumer/User';
 import { newUserData } from '../../models/requests/newUser';
 import { User } from "../../models/infra/user";
 import { Wallet } from "ethers"
-import { createHash } from 'crypto';
-import { Users } from '../../clients/orm/entity/User';
 
 export default class newUserService {
     public async insertUser(newUserData: newUserData): Promise<string> {
@@ -19,7 +17,8 @@ export default class newUserService {
 
         const createdUser = await new UserDbConsumer(newUser).insert();
         if ( createdUser !== "error") return createdUser;
-        return "error"
+    
+        throw `error to cadaster user, \n${JSON.stringify(newUser)}`
     }
 
     private async newWallet() {

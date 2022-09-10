@@ -1,4 +1,5 @@
 export interface User {
+    id?: string
     name: string
     password: string
     user_side_public_key: string
