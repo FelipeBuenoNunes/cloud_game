@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import {  Router } from "express";
 import { validateSession } from "../config/http/middleware/validateSession";
 import { getMessage, createUser, login } from "../controller/user/index";
 

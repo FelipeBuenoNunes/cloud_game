@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { InvalidSession } from "../../../models/errors/client";
 import sessionServices from "../../../service/session/sessionServices";
+import sessionControls from '../../..//service/session/sessionServices'
 
-//type cookie = new Map(string, string)
 
 export class validateSession {
     private cookie?: string;
@@ -21,7 +21,13 @@ export class validateSession {
         await this.validateCookie();
         if(!this.obj) return this.validateEndpoint();
         
-        return res.send(JSON.stringify(this.obj.get()));
+        res.locals.sessionClass = this.obj;
+        console.log(res.locals.sessionClass)
+        if(this.path === "/login") {
+            res.cookie(sessionControls.cookieName, this.obj.getID(), { expires: this.obj.getExpires() });
+            res.status(200).send();
+        }
+        this.nextFunction();
     }
 
     private validateEndpoint() {

@@ -11,9 +11,9 @@ export default class createUser {
         try {
             const newUserData: newUserData = req.body;
             const userManipulator = new newUser();
-            const newUserID = await userManipulator.insertUser(newUserData);
+            const user = await userManipulator.insertUser(newUserData);
             
-            const session = new sessionControls(newUserID);
+            const session = new sessionControls(user.id, user.wallet_public_key);
 
             res.cookie(sessionControls.cookieName, session.getID(), { expires: session.getExpires() })
             res.send("algum dado aqui...")

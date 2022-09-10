@@ -8,13 +8,14 @@ export default class sessionServices {
     private idSession: string;
     private expires?: number;
 
-    constructor(idUser?: string) {
-        if (!idUser) return;
+    constructor(idUser?: string, publicKey?: string) {
+        if (!idUser || !publicKey) return;
 
         this.idSession = randomUUID();
         this.session = {
-            inGame: false,
-            idUser: idUser
+            idUser: idUser,
+            publicKey: publicKey,
+            inGame: false
         }
         this.setSession();
     }
@@ -46,6 +47,7 @@ export default class sessionServices {
     public updateSession(isGame: boolean, gameSessionId?: string) {
         this.session = {
             idUser: this.session.idUser,
+            publicKey: this.session.publicKey,
             inGame: isGame,
             gameSessionId: gameSessionId
         }
