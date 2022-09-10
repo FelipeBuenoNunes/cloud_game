@@ -11,11 +11,12 @@ export class UserDbConsumer {
 
     private createInstance(user: User) {
         const newUser = new Users();
-        newUser.name = user.name;
+        newUser.name = user.name || "";
         newUser.password = createHash('sha256').update(user.password).digest('hex');
         newUser.user_side_public_key = user.user_side_public_key;
-        newUser.wallet_public_key = user.wallet_public_key;
-        newUser.wallet_private_key = user.wallet_private_key;
+        newUser.wallet_public_key = user.wallet_public_key || "";
+        newUser.wallet_private_key = user.wallet_private_key || "";
+
         this.user = newUser;
     }
 
@@ -25,28 +26,22 @@ export class UserDbConsumer {
             //returns the id to create a session
             return this.user.id
         }catch(e: any) {
-            if(e.code === '23505') {
+            if(e.code === '23505') 
                 throw UserAlreadyExists
-            }
-            //todo error
-            return "error"
+            
+            throw "Unspecified error"
         }
     }
 
-    public async find(): Promise<string>{
+    public async find(): Promise<User|null>{
         try {
-            await Users.findOneBy({
-                user_side_public_key: this.user.user_side_public_key
-            })
-            console.log('success')
-            return 'sucesso no find'
+            const user = await Users.findOneBy({
+                user_side_public_key: this.user.user_side_public_key,
+                password: this.user.password
+            });
+            return user;
         }catch(e: any) {
-            console.log(e)
-            // if(e.code === '23505') {
-            //     throw UserAlreadyExists
-            // }
-            
-            return "error"
+            throw "Unspecified error"
         }
     }
 

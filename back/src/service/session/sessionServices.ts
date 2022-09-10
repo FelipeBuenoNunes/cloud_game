@@ -5,7 +5,8 @@ import { randomUUID } from 'crypto';
 export default class sessionServices {
     public static cookieName = "pachin-game/cookie"
     private session: Session;
-    private idSession: string
+    private idSession: string;
+    private expires?: number;
 
     constructor(idUser?: string) {
         if (!idUser) return;
@@ -32,9 +33,12 @@ export default class sessionServices {
         return newSessionService;
     }
 
-    public get = (): string => this.idSession;
+    public getID = (): string => this.idSession;
+    public get = (): Session => this.session;
+    public getExpires = (): Date => new Date(this.expires || 0)
 
     private async setSession(): Promise<string> {
+        this.expires = Date.now() + 5*60*1000;
         await redis.setex(this.idSession, 500, JSON.stringify(this.session));
         return this.idSession;
     }

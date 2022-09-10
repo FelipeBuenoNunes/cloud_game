@@ -7,7 +7,6 @@ export class Users extends BaseEntity {
     id: string
 
     @Column({
-        unique: true,
         length: 50
     })
     name: string
@@ -18,19 +17,16 @@ export class Users extends BaseEntity {
     password: string
 
     @Column({
-        unique: true,
         length: 42
     })
     user_side_public_key: string
 
     @Column({
-        unique: true,
         length: 42
     })
     wallet_public_key: string
 
     @Column({
-        unique: true,
         length: 66
     })
     wallet_private_key: string

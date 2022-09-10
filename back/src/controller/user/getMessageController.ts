@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { getMessageResponse } from "../../models";
-import getMessageService from "../../service/user/getMessageService"
+import getMessageService from "../../service/user/getMessage"
 
 export default class getMessage {
     private service = getMessageService

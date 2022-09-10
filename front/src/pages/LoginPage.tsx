@@ -21,7 +21,7 @@ export default function LoginPage() {
   }, []);
 
   async function connect(): Promise<void | { personalWallet: string; password: string; userName: string; }> {
-    const response = await fetch('http://localhost:8081/get-message',{
+    const response = await fetch('http://localhost:8080/get-message',{
       credentials: 'include',
     });
     const message = await response.json();
@@ -36,7 +36,7 @@ export default function LoginPage() {
     const accounts = await provider.send('eth_requestAccounts', []);
     if (!accounts || !accounts.length) return setError('Wallet not found/allowed!');
 
-    localStorage.setItem('wallet', accounts[0]);
+    //localStorage.setItem('wallet', accounts[0]);
 
     setWallet(accounts[0]);
 
@@ -54,7 +54,7 @@ export default function LoginPage() {
   function doSignUp() {
     connect()
       .then(credentials => {
-        fetch('http://localhost:8081/new-user', {
+        fetch('http://localhost:8080/new-user', {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(credentials),
@@ -75,7 +75,7 @@ export default function LoginPage() {
     connect()
       .then(credentials => {
         console.log(credentials);
-        fetch('http://localhost:8081/login', {
+        fetch('http://localhost:8080/login', {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(credentials),

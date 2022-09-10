@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { apiResponseError } from "../../models";
 import { UnspecifiedError } from "../../models/errors/server";
 import { newUserData } from '../../models/requests/newUser';
-import newUser from '../../service/user/newUserService';
+import newUser from '../../service/user/newUser';
 import sessionControls from '../../service/session/sessionServices'
 
 
@@ -15,7 +15,7 @@ export default class createUser {
             
             const session = new sessionControls(newUserID);
 
-            res.cookie(sessionControls.cookieName, session.get())
+            res.cookie(sessionControls.cookieName, session.getID(), { expires: session.getExpires() })
             res.send("algum dado aqui...")
             
         }catch(e) {

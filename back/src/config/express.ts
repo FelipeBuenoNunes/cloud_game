@@ -1,4 +1,4 @@
-import express, { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import router from "../routes/router";
 import cookieParser from "cookie-parser"
@@ -13,7 +13,8 @@ const corsConfiguration = {
 
 app.use(cors(corsConfiguration));
 app.use(express.json());
+app.use(cookieParser());
 app.use(router);
-app.use(errorDefault) 
+app.use(errorDefault)
 
 export default app;

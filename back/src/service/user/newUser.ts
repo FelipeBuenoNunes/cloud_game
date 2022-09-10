@@ -2,8 +2,6 @@ import { UserDbConsumer } from '../../clients/pg-database-consumer/User';
 import { newUserData } from '../../models/requests/newUser';
 import { User } from "../../models/infra/user";
 import { Wallet } from "ethers"
-import { createHash } from 'crypto';
-import { Users } from '../../clients/orm/entity/User';
 
 export default class newUserService {
     public async insertUser(newUserData: newUserData): Promise<string> {
