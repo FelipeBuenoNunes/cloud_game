@@ -4,7 +4,7 @@ export class Tochinko {
 
     private static contract = Contract.getContract();
 
-    public static async mintTokem(publicKey: string, qtd: number): Promise<boolean> {
+    public static async minttoken(publicKey: string, qtd: number): Promise<boolean> {
         try {
             await Tochinko.contract.mint(publicKey, qtd);
             return true
@@ -14,7 +14,7 @@ export class Tochinko {
         }
     }
 
-    public static async burnTokem(publicKey: string, qtd: number): Promise<boolean> {
+    public static async burntoken(publicKey: string, qtd: number): Promise<boolean> {
         try {
             await Tochinko.contract.burnLove(publicKey, qtd);
             return true

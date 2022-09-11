@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validateSession } from "../config/http/middleware/validateSession";
 import { getBalance } from "../controller/wallet/balance";
-import { mintTokem } from "../controller/wallet/mintToken";
+import { minttoken } from "../controller/wallet/mintToken";
 
 
 const router = Router();
@@ -15,9 +15,9 @@ router.get(
 );
 
 router.post(
-    "/wallet/buy_tokem",
+    "/wallet/buy_token",
     new validateSession().middleware.bind(new validateSession()),
-    new mintTokem().handler.bind(new mintTokem())
+    new minttoken().handler.bind(new minttoken())
 );
 
 export default router;

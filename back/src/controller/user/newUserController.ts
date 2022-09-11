@@ -16,7 +16,7 @@ export default class createUser {
             const session = new sessionControls(user.id, user.wallet_public_key);
 
             res.cookie(sessionControls.cookieName, session.getID(), { expires: session.getExpires() })
-            res.send("algum dado aqui...")
+            res.status(200).end();
             
         }catch(e) {
             if(e instanceof apiResponseError) return next(e)

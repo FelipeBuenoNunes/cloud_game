@@ -15,7 +15,7 @@ export default class login {
             if(!user.id) throw "Unspecified error";
             const session = new sessionControls(user.id, user.wallet_public_key);
             res.cookie(sessionControls.cookieName, session.getID(), { expires: session.getExpires() });
-            res.status(200).send();
+            res.status(200).end();
         }catch(e) {
             if(e instanceof apiResponseError) return next(e);
             next(UnspecifiedError);
