@@ -6,7 +6,7 @@ import sessionServices from "../../service/session/sessionServices";
 import { walletService } from "../../service/wallet/wallet";
 
 
-export class minttoken {
+export class mintToken {
     public async handler(req: Request, res: Response, next: NextFunction) {
         try {
             const amount = req.body.amount;
