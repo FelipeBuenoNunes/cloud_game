@@ -21,11 +21,11 @@ export class UserDbConsumer {
         this.user = newUser;
     }
 
-    public async insert(): Promise<string>{
+    public async insert(): Promise<User>{
         try {
             await this.user.save()
             //returns the id to create a session
-            return this.user.id
+            return this.user
         }catch(e: any) {
             if(e.code === '23505') throw UserAlreadyExists;
             

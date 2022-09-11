@@ -4,7 +4,7 @@ import { User } from "../../models/infra/user";
 import { Wallet } from "ethers"
 
 export default class newUserService {
-    public async insertUser(newUserData: newUserData): Promise<string> {
+    public async insertUser(newUserData: newUserData): Promise<User> {
 
         const newWallet = await this.newWallet();
         const newUser: User = {
@@ -16,9 +16,7 @@ export default class newUserService {
         }
 
         const createdUser = await new UserDbConsumer(newUser).insert();
-        if ( createdUser !== "error") return createdUser;
-    
-        throw `error to cadaster user, \n${JSON.stringify(newUser)}`
+        return createdUser;
     }
 
     private async newWallet() {

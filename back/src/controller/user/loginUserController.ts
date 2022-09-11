@@ -13,10 +13,9 @@ export default class login {
 
             const user = await login.getUser();
             if(!user.id) throw "Unspecified error";
-            const session = new sessionControls(user.id);
+            const session = new sessionControls(user.id, user.wallet_public_key);
             res.cookie(sessionControls.cookieName, session.getID(), { expires: session.getExpires() });
-            res.json("algum dado aqui...");
-            
+            res.status(200).send();
         }catch(e) {
             if(e instanceof apiResponseError) return next(e);
             next(UnspecifiedError);
