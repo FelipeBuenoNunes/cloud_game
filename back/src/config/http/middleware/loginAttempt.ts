@@ -45,7 +45,6 @@ export default class LogginAttempts {
     incorrectPasswordIsLocked() {
         this.countAttempts++;
         this.timeAttempts.push(Date.now());
-        console.log(this.countAttempts)
         if (this.countAttempts >= 3) {
             if (this.blockedTimeSeconds > 0) {
                 this.blockedTimeSeconds *= 2;
