@@ -9,9 +9,9 @@ const ContainerPlayer = ({ p1, p2, p3, p4, p5, className }) => {
           <SinglePlayer positionLeft={true} />
           <SinglePlayer />
         </div>
-        <div className="flex flex-row justify-between items-center my-4 gap-x-2">
-          <SinglePlayer positionLeft={true} className={`md:ml-[5%]`} />
-          <SinglePlayer className={`md:mr-[5%]`} />
+        <div className="flex flex-row justify-between items-center my-2 gap-x-2">
+          <SinglePlayer positionLeft={true} className={`md:ml-[10%]`} />
+          <SinglePlayer className={`md:mr-[10%]`} />
         </div>
       </div>
 

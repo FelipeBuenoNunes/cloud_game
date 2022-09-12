@@ -10,14 +10,6 @@ const exArr = [
   ["K", "H"],
   ["J", "S"],
   ["J", "S"],
-  ["J", "S"],
-  ["J", "S"],
-  ["J", "S"],
-  ["J", "S"],
-  ["J", "S"],
-  ["J", "D"],
-  ["J", "D"],
-  ["J", "D"],
 ]
 
 const SinglePlayer = ({ arrayCards, className, positionLeft, mainPlayer }) => {
