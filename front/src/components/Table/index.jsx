@@ -1,11 +1,13 @@
 import ContainerPlayer from "../ContainerPlayer";
+import Header from "../Header";
 
 const Table = ({ children }) => {
   // bg-boardMobile
   return (
     <>
       <section className="bg-boardMobile bg-no-repeat bg-cover object-contain bg-center w-screen h-screen flex flex-col md:bg-boardDesktop">
-        <div className="w-full h-[5vh] bg-transparent mt-0">header</div>
+        {/* <div className="w-full h-[5vh] bg-transparent mt-0">header</div> */}
+        <Header />
 
         <section className="w-full h-[10vh] bg-transparent flex justify-center items-center gap-x-4 ">
           <span className="w-[75px] h-[80%] border-4 border-black "></span>
