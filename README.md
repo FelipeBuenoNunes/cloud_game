@@ -2,18 +2,21 @@
 
 ## Testing app:
 
-1 - insert .env on /back with following data:
+1 - insert .env on /back with following keys:
 
 |  var environment  |
 |-------------------|
 |    SERVER_PORT    |
+|   SECRET_MESSAGE  |
 |   POSTGRES_USER   |
 | POSTGRES_PASSWORD |
 |    POSTGRES_DB    |
 |   POSTGRES_PORT   |
-|  SECRET_MESSAGE   |
+|    REDIS_PORT     |
+|  CONTRACT_ADDRESS |
+| ETHERS_PRIVATE_KEY|
 
-2 - insert .env on project root with following data:
+2 - insert .env on project root with following keys:
 
 |     var environment      |
 |--------------------------|
@@ -32,6 +35,8 @@ Run the following command to connect to the database(redis) with redis-cli
 
 
 3 - on project root run:
+> First:
+You need to fill all environment variables 
 
 ```
 docker-compose up
