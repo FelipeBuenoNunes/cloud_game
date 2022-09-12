@@ -19,6 +19,7 @@ export default class createUser {
             res.status(200).end();
             
         }catch(e) {
+            console.error(e);
             if(e instanceof apiResponseError) return next(e)
             next(UnspecifiedError)            
         }

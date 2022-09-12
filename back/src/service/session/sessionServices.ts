@@ -39,9 +39,14 @@ export default class sessionServices {
     public getExpires = (): Date => new Date(this.expires || 0)
 
     private async setSession(): Promise<string> {
-        this.expires = Date.now() + 5*60*1000;
-        await redis.setex(this.idSession, 500, JSON.stringify(this.session));
+        await redis.setex(this.idSession, this.refreshCookie(), JSON.stringify(this.session));
         return this.idSession;
+    }
+    
+    public refreshCookie() {
+        const timeSession = (this.session.inGame) ? 24*60 : 5*60
+        this.expires = (this.session.inGame) ? Date.now() + timeSession*1000 : Date.now() + timeSession*1000;
+        return timeSession;
     }
 
     public updateSession(isGame: boolean, gameSessionId?: string) {
@@ -53,5 +58,6 @@ export default class sessionServices {
         }
         this.setSession();
     }
+
 
 }

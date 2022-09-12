@@ -12,7 +12,6 @@ const corsConfiguration = {
 }
 
 app.use(cors(corsConfiguration));
-app.use(express.json());
 app.use(cookieParser());
 app.use(router);
 app.use(errorDefault)
