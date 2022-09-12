@@ -1,24 +1,32 @@
-// estilizar para cartas ficarem uma em cima da outra, alinhadas a esquerda
-
 const exArr = [
-  ["A-","C"],
-  ["A-","E"],
-  ["A-","P"],
-  ["A-","O"],
+  ["A-", "C"],
+  ["A-", "E"],
+  ["A-", "P"],
+  ["A-", "O"],
 ]
 
-const ContainerCards = ({arrCards}) => {
-  return(
-    <section className="flex flex-row  border-2 border-red-500 " >
-      {arrCards.map((elem,index,arr) => (
-          <div key={index} className="bg-pink-300 flex flex-row justify-center items-center text-black w-[40px] " >
-            |{elem[0]+elem[1]}|
-          </div>
-      ))}
+const ContainerCards = ({ arrCards, className }) => {
+  return (
+    <section className={`max-h-[100px] flex flex-row flex-wrap justify-center items-center overflow-auto border-2 border-red-500 ${className}`} >
+      {arrCards && loadImageCards(arrCards)}
     </section>
   );
 };
 
 export default ContainerCards;
-{/* {String(elem[0])}
-{String(elem[1])} */}
+
+const loadImageCards = (arr) => {
+  return arr.map((elem, index) => {
+    const number = elem[0];
+    const suit = elem[1];
+
+    const nameCard = number + '-' + suit + '.png';
+    const pathImage = `./assets/cards/${suit}/${nameCard}`;
+
+    return (
+      <div className="min-w-[33px] max-w-[33px] h-[53px]">
+        <img key={index} src={`${pathImage}`} className='object-contain' ></img >
+      </div>
+    );
+  });
+};

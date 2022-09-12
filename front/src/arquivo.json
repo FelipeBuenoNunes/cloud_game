@@ -1,0 +1,76 @@
+{
+  "info": {
+    "_postman_id": "87cb6a8d-488b-4716-bc81-d71b6fcc12df",
+    "name": "pachinko",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "cadaster",
+      "id": "6b60afc4-c298-4a60-9a5b-2b2c02381210",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"userName\": \"buenaaao\",\n    \"password\": \"123\",\n    \"personalWallet\": \"12345\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "localhost:8080/new-user"
+      },
+      "response": []
+    },
+    {
+      "name": "login",
+      "id": "08843bdf-b763-4c7f-9ce7-5ef50ca2f776",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"password\": \"123\",\n    \"personalWallet\": \"12345\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "localhost:8080/login"
+      },
+      "response": []
+    },
+    {
+      "name": "buyTokem",
+      "id": "eaa3863f-81f4-441f-9507-ae83d742ed99",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"amount\": \"500\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "localhost:8080/wallet/buy_tokem"
+      },
+      "response": []
+    },
+    {
+      "name": "getBalance",
+      "id": "9a80d302-14ec-48ef-8310-e2436017ae24",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "localhost:8080/wallet/balance"
+      },
+      "response": []
+    }
+  ]
+}

@@ -1,45 +1,49 @@
+import BetChips from "./elements/BetChips";
 import ContainerCards from "./elements/ContainerCard";
 import ImagePlayer from "./elements/ImagePlayer";
-import Chips from "./elements/chips";
-import SumCards from "./elements/sumCards";
+import Chips from "./elements/Chips";
+import SumCards from "./elements/SumCards";
 // import img from "../../assets/cards/"
 
 
 const exArr = [
-  ["A", "C"],
-  ["A", "C"],
-  ["4", "C"],
+  ["K", "H"],
+  ["J", "S"],
+  ["J", "S"],
+  ["J", "S"],
+  ["J", "S"],
+  ["J", "S"],
+  ["J", "S"],
+  ["J", "S"],
+  ["J", "D"],
+  ["J", "D"],
+  ["J", "D"],
 ]
 
-const SinglePlayer = ({ arrayCards }) => {
+const SinglePlayer = ({ arrayCards, className, positionLeft, mainPlayer }) => {
+  const containerCards = positionLeft ? 'order-2' : '';
+  const containerImage = positionLeft ? 'order-1' : '';
+  const MainPlayer = mainPlayer ? 'flex flex-col' : '';
+  const overflowX = mainPlayer ? 'flex-nowrap max-w-[300px]' : '';
+
   return (
-    <section className="w-[30%]  border-4 border-black flex flex-col justify-center items-center" >
-      <ContainerCards arrCards={exArr} />
-      <ImagePlayer />
-      <Chips value="12.000" />
-      <SumCards sumOfCards={17} />
-      {imageCards(exArr)}
+    <section className={` flex flex-row justify-center items-center ${className} ${MainPlayer}`} >
+      <div className={`${containerCards}`} >
+        <ContainerCards arrCards={exArr} className={`${overflowX}`} />
+        <SumCards sumOfCards={13} />
+      </div>
+
+      <div className={`flex flex-col items-center gap-x-1 ${containerImage} `} >
+        <BetChips valueBet={100} />
+        <ImagePlayer />
+        <Chips value="12.000" />
+      </div>
     </section>
   );
 };
 
 export default SinglePlayer;
 
-// function para carregar images
-const imageCards = (arr) => {
-  let imageName = '';
-  const suits = ['spades', 'hearts', 'clubs', 'diamonds'];
+// [V] function para carregar images
 
-  return (
-    arr.map((elem) => {
-      const numberCard = elem[0];
-      const suitCard = elem[1];
-      imageName = numberCard + '-' + suitCard + '.png';
-      // console.log(`../../assets/cards/${suitCard}/${imageName} `)
-      <img src={`../../assets/cards/${suitCard}/${imageName} `} ></img>
-    })
-  );
-
-};
-
-// function para somar as cartas
+// [ ] function para somar as cartas
