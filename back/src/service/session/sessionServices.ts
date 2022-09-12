@@ -43,17 +43,18 @@ export default class sessionServices {
         return this.idSession;
     }
     
-    public refreshCookie() {
+    private refreshCookie() {
         const timeSession = (this.session.inGame) ? 24*60 : 5*60
         this.expires = (this.session.inGame) ? Date.now() + timeSession*1000 : Date.now() + timeSession*1000;
         return timeSession;
     }
 
-    public updateSession(isGame: boolean, gameSessionId?: string) {
+    public updateSession(isGame?: boolean, gameSessionId?: string) {
+        if(isGame && !gameSessionId) throw new Error("ARGUMENT INVALID");
         this.session = {
             idUser: this.session.idUser,
             publicKey: this.session.publicKey,
-            inGame: isGame,
+            inGame: isGame || this.session.inGame,
             gameSessionId: gameSessionId
         }
         this.setSession();
