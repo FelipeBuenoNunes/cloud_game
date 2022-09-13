@@ -1,7 +1,7 @@
-import { Session } from "inspector";
 import { redis } from "../../config/redis";
 import sessionServices from "../session/sessionServices";
 
+//This class is simply for validating and do the "handshake"
 export class startSessionWs {
     private id: string;
     private session: sessionServices;
