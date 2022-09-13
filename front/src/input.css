@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .card-bj{
+    @apply bg-green-400 text-red-400;
+  }
+}
