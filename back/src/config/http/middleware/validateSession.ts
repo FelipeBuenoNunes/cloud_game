@@ -22,8 +22,9 @@ export class validateSession {
         
         res.locals.sessionClass = this.obj;
         if(this.path === "/login") {
+            this.obj.updateSession();
             res.cookie(sessionServices.cookieName, this.obj.getID(), { expires: this.obj.getExpires() });
-            res.status(200).send();
+            return res.status(200).end();
         }
         this.nextFunction();
     }
