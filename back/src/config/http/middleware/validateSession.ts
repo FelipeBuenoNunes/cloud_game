@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { InvalidSession } from "../../../models/errors/client";
 import sessionServices from "../../../service/session/sessionServices";
-import sessionControls from '../../..//service/session/sessionServices'
 
 
 export class validateSession {
@@ -24,7 +23,7 @@ export class validateSession {
         res.locals.sessionClass = this.obj;
         if(this.path === "/login") {
             this.obj.updateSession();
-            res.cookie(sessionControls.cookieName, this.obj.getID(), { expires: this.obj.getExpires() });
+            res.cookie(sessionServices.cookieName, this.obj.getID(), { expires: this.obj.getExpires() });
             return res.status(200).end();
         }
         this.nextFunction();

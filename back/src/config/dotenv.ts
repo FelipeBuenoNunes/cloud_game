@@ -17,7 +17,8 @@ const config = {
     REDIS_PORT: parseInt(process.env.REDIS_PORT || "0"),
     //BLOCKCHAIN
     ETHERS_PRIVATE_KEY: process.env.ETHERS_PRIVATE_KEY,
-    CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS
+    CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS,
+    SECRET_MESSAGE: process.env.SECRET_MESSAGE
 };
 
 // Object.values(config).forEach((value) => {

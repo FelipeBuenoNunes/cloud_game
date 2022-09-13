@@ -1,6 +1,5 @@
-import dotenv from "dotenv"
+import { config } from "../../config/dotenv";
 
-dotenv.config();
 
 export default class getMessageService {
 
@@ -9,7 +8,7 @@ export default class getMessageService {
     }
 
     private randomMessage(): string {
-        const secret = process.env.SECRET_MESSAGE!
+        const secret = config.SECRET_MESSAGE!
         return secret;
     }
 }

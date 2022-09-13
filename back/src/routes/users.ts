@@ -1,6 +1,6 @@
 import { json, Router } from "express";
 import { validateSession } from "../config/http/middleware/validateSession";
-import { getMessage, createUser, login } from "../controller/user/index";
+import { getMessage, createUser, login, handshakeToken } from "../controller/user/index";
 import { PatternValidate } from "../config/http/middleware/parserAndValidate"
 import { loginUserDataExpected } from "../models/requests/login";
 import { newUserExpected } from "../models/requests/newUser";
@@ -19,5 +19,10 @@ router.post("/login",
     json({ reviver: PatternValidate(loginUserDataExpected) }),
     new login().handler.bind(new login())
 );
+
+router.get("/handshake-tokem",
+    new validateSession().middleware.bind(new validateSession()),
+    new handshakeToken().handler.bind(new handshakeToken())
+)
 
 export default router;
