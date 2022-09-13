@@ -1,4 +1,0 @@
-const Dealer = {
-  cards: [],
-  deck: [[]],
-};
