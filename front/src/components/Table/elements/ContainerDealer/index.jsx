@@ -4,6 +4,6 @@ const ContainerDealer = ({ className }) => {
       <span className="w-[75px] h-[80%] border-4 border-black "></span>
       <span className="w-[75px] h-[80%] border-4 border-black "></span>
     </section>
-  )
-}
-export default ContainerDealer
+  );
+};
+export { ContainerDealer };

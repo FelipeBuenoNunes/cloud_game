@@ -8,4 +8,4 @@ const ContainerButtons = ({ className }) => {
   )
 }
 
-export default ContainerButtons;
+export { ContainerButtons };

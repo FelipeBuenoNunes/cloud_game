@@ -1,5 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { useState, useEffect, SetStateAction } from 'react';
+import Login from './elements/ContainerLogin';
 // import { ethers } from 'ethers';
 // import { doSignInBackend, doSignOutBackend, doSignUpBackend, getProfileBackend } from './AppService.js';
 // import { useNavigate } from 'react-router-dom';
@@ -21,8 +22,9 @@ export default function LoginPage() {
     if (address) doSignIn();
   }, []);
 
-  async function connect(): Promise<void | { personalWallet: string; password: string; userName: string; }> {
-    const response = await fetch('http://localhost:8081/get-message',{
+  // async function connect(): Promise<void | { personalWallet: string; password: string; userName: string; }> {
+  async function connect() {
+    const response = await fetch('http://localhost:8081/get-message', {
       credentials: 'include',
     });
     const message = await response.json();
@@ -47,7 +49,8 @@ export default function LoginPage() {
     return { personalWallet: accounts[0], password, userName: 'hugo' };
   }
 
-  async function loadProfile(token: string) {
+  // async function loadProfile(token: string) {
+  async function loadProfile(token) {
     const profile = await getProfileBackend(token);
     setProfile(profile);
   }
@@ -111,7 +114,8 @@ export default function LoginPage() {
         setWallet('');
         setBalance('');
       })
-      .catch((err: { message: SetStateAction<string>; }) => setError(err.message));
+      .catch((err) => setError(err.message));
+    // .catch((err: { message: SetStateAction<string>; }) => setError(err.message));
   }
 
   return (

@@ -1,4 +1,4 @@
-import SinglePlayer from "../singlePlayer";
+import SinglePlayer from "./elements/singlePlayer";
 // import img from '../../assets/bg-game-desktop.png'
 
 const ContainerPlayer = ({ p1, p2, p3, p4, p5, className }) => {
@@ -22,4 +22,4 @@ const ContainerPlayer = ({ p1, p2, p3, p4, p5, className }) => {
   );
 };
 
-export default ContainerPlayer;
+export { ContainerPlayer };

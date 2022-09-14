@@ -21,4 +21,4 @@ const Header = ({ className }) => {
     </section>
   );
 };
-export default Header;
+export { Header };

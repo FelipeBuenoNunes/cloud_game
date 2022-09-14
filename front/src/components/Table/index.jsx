@@ -1,7 +1,9 @@
-import Header from "../Header";
-import ContainerDealer from "../ContainerDealer";
-import ContainerPlayer from "../ContainerPlayer";
-import ContainerButtons from "../ContainerButtons";
+// import Header from "../Header";
+// import ContainerDealer from "../ContainerDealer";
+// import ContainerPlayer from "../ContainerPlayer";
+// import ContainerButtons from "./elements/ContainerButtons";
+
+import { Header, ContainerDealer, ContainerPlayer, ContainerButtons } from './elements';
 
 const Table = ({ children }) => {
   return (
