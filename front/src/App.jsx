@@ -1,4 +1,5 @@
 import Table from "./components/Table";
+import LoginPage from "./LoginPage/LoginPage";
 import "./input.css";
 
 const children = 'asdfasldfasdfqq';
@@ -6,7 +7,8 @@ const children = 'asdfasldfasdfqq';
 function App() {
   return (
     <div className=" w-screen h-screen">
-      <Table  />
+      {/* <Table  /> */}
+      <LoginPage />
     </div>
   );
 }

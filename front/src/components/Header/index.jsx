@@ -6,9 +6,9 @@ const exit = `${process.env.PUBLIC_URL}/assets/icons/exit.png`;
 const sound = `${process.env.PUBLIC_URL}/assets/icons/sound.png`;
 const help = `${process.env.PUBLIC_URL}/assets/icons/help.png`;
 
-const Header = () => {
+const Header = ({ className }) => {
   return (
-    <section className="flex flex-row justify-start items-center gap-x-1 ml-4" >
+    <section className={`flex flex-row justify-start items-center mx-4 gap-x-1 ${className}`} >
       <button onClick={() => { console.log('button exit') }} >
         <img src={exit} alt="" />
       </button>
