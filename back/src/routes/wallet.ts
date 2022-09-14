@@ -15,6 +15,7 @@ router.use(regexp, new validateSession().middleware.bind(new validateSession()))
  * /wallet/get_balance:
  *  get:
  *      description: Return the balance
+ *      tags: [wallets]
  *      parameters: 
  *        - in: header
  *          name: pachin-game/cookie
@@ -49,6 +50,7 @@ router.get("/wallet/balance", new getBalance().handler.bind(new getBalance()));
  * /wallet/buy_token:
  *  post:
  *      description: To buy tokens
+ *      tags: [wallets]
  *      parameters: 
  *        - in: header
  *          name: pachin-game/cookie

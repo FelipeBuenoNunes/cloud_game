@@ -12,6 +12,7 @@ const router = Router();
  * /new-user:
  *  post:
  *      description: Generate a new user and set a cookie (after the message is signed)
+ *      tags: [users]
  *      requestBody:
  *       required: true
  *       content:
@@ -45,6 +46,7 @@ router.post("/new-user",
  * /get-message:
  *  get:
  *      description: Get the message before login or new user, this endpoint returns a message to sign
+ *      tags: [users]
  *      parameters: 
  *        - in: header
  *          name: pachin-game/cookie
@@ -80,6 +82,7 @@ router.get("/get-message", new getMessage().handler.bind(new getMessage()));
  * /login:
  *  post:
  *      description: To login and return a cookie (after the message is signed)
+ *      tags: [users]
  *      requestBody:
  *       required: true
  *       content:
