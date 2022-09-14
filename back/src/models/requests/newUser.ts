@@ -7,6 +7,25 @@ export interface newUserData {
     userName: string,
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     newUserData:
+ *       type: object
+ *       properties:
+ *         personalWallet:
+ *           type: string
+ *           example: ""
+ *         password:
+ *           type: string
+ *           description: Is a message signed
+ *           example: ""
+ *         username:
+ *           type: string
+ *           example: ""
+ */
+
 export const newUserExpected: argumentFunctionValidate = {
     obj: { 
         personalWallet: "",

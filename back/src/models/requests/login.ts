@@ -6,6 +6,22 @@ export interface loginUserData {
     password: string,
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     loginUserData:
+ *       type: object
+ *       properties:
+ *         personalWallet:
+ *           type: string
+ *           example: ""
+ *         password:
+ *           type: string
+ *           description: Is a message signed
+ *           example: ""
+ */
+
 export const loginUserDataExpected: argumentFunctionValidate = {
     obj: { 
         personalWallet: "",

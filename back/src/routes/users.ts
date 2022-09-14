@@ -7,13 +7,101 @@ import { newUserExpected } from "../models/requests/newUser";
 
 const router = Router();
 
+/**
+ * @swagger
+ * /new-user:
+ *  post:
+ *      description: Generate a new user and set a cookie (after the message is signed)
+ *      requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/loginUserData'
+ *      responses:
+ *          200:
+ *            description: OK and set a cookie
+ *          400:
+ *              description: Bad Request
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    $ref: '#/components/schemas/messageError'
+ *          500:
+ *              description: Bad Request
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    $ref: '#/components/schemas/messageError'
+ */
+
 router.post("/new-user",
     json({ reviver: PatternValidate(newUserExpected) }),
     new createUser().handler.bind(new createUser())
 );
 
+/**
+ * @swagger
+ * /get-message:
+ *  get:
+ *      description: Get the message before login or new user, this endpoint returns a message to sign
+ *      parameters: 
+ *        - in: header
+ *          name: pachin-game/cookie
+ *          schema:
+ *            type: string
+ *            format: uuid
+ *            required: true
+ *      responses:
+ *          200:
+ *            description: OK
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  $ref: '#/components/schemas/getMessageResponse'
+ *          400:
+ *              description: Bad Request
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    $ref: '#/components/schemas/messageError'
+ *          500:
+ *              description: Bad Request
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    $ref: '#/components/schemas/messageError'
+ */
+
 router.get("/get-message", new getMessage().handler.bind(new getMessage()));
 
+/**
+ * @swagger
+ * /login:
+ *  post:
+ *      description: To login and return a cookie (after the message is signed)
+ *      requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/loginUserData'
+ *      responses:
+ *          200:
+ *            description: OK and set a cookie
+ *          400:
+ *              description: Bad Request
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    $ref: '#/components/schemas/messageError'
+ *          500:
+ *              description: Bad Request
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    $ref: '#/components/schemas/messageError'
+ */
 router.post("/login",
     new validateSession().middleware.bind(new validateSession()),
     json({ reviver: PatternValidate(loginUserDataExpected) }),
