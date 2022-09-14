@@ -6,6 +6,25 @@ interface messageError {
     message: string
 }
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     messageError:
+ *       type: object
+ *       properties:
+ *         code:
+ *           type: number
+ *           example: 0
+ *         kind:
+ *           type: string
+ *           enum: [CLIENT, SERVER]
+ *           example: ""
+ *         message: 
+ *           type: string
+ *           example: ""
+ */
+
 class apiResponseError extends Error {
     private code: number | null
     private kind: kindError
