@@ -20,17 +20,8 @@ const server = app.listen(
 
 
 server.on('upgrade', (request, socket, head) => {
-    //const isValid = new startSessionWs(request.headers.auth?.toString() || "").isValid();
-    
-    //isValid.then(valid => {
-        //if (!valid) throw "ERRASTES?"
-
-        wsServer.handleUpgrade(request, socket, head, s => {
-            wsServer.emit('connection', s, request);
-        });
-    // }).catch(e => {
-    //     console.error(e)
-    //     return socket.destroy();
-    // }) 
-
+    wsServer.handleUpgrade(request, socket, head, s => {
+        
+        wsServer.emit('connection', s, request);
+    });
 });
