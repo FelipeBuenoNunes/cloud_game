@@ -2,7 +2,6 @@ import { ISocket } from "../models/wSocket";
 import { logicGame } from "./gameLogic";
 
 type Rooms = {
-    id: string
     name: string
     qtdPlayers: number
 }
@@ -12,23 +11,18 @@ export class room {
     
     public static getCreatedRooms(): Rooms[] {
         const arrRooms: Rooms[] = [];
-        
-        this.rooms.forEach((room: room, id: string) => arrRooms.push({
-            id: id,
+        this.rooms.forEach((room: room) => arrRooms.push({
             name: room.name,
             qtdPlayers: room.users.length
-        }));
-        
+        }));    
         return arrRooms;
     }
     
-    public static getRoomById(id: string) {
-        return room.rooms.get(id)
-    }
+    public static getRoomByName = (name: string) => room.rooms.get(name)
 
     //enter if has a room with the given name and returns a boolean
     private static enterIfhasRoom(name: string, user: ISocket): boolean {
-        const possibleRoom = room.getRoomById(name);
+        const possibleRoom = room.getRoomByName(name);
         if(possibleRoom) {
             possibleRoom.enter(user);
             return true;
@@ -41,19 +35,17 @@ export class room {
         if(room.enterIfhasRoom(name, user)) return;
         new room(name, user);
     }
-    
-    //Instace methods
 
-    private id: string;
+    //************************Instace methods************************\\
+
     private name: string;
     private users: ISocket[];
     private game: logicGame
     
     constructor(name: string, user: ISocket) {
-        this.id = name; //todo
         this.users = [user]; //first user
         this.name = name;
-        this.game = new logicGame();
+        this.game = new logicGame(this.users.map(user => user.idUser));
         room.rooms.set(this.name, this);
     }
 
@@ -78,10 +70,8 @@ export class room {
         return false;
     }
 
-    public getCard(message: string) {
-        this.users.forEach( x => {
-            x.send(message)
-        })
+    public getCard(user: string) {
+        return this.game.getCard(user);
     }
 
     public getUsers = () => this.users;
