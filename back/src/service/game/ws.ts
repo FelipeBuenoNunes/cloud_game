@@ -1,8 +1,8 @@
+import Cookie from 'cookie'
 import { IncomingMessage } from "http";
 import ws from "ws";
 import { ISocket } from "./models/wSocket";
 import { room } from "./service/room";
-import { sessionWs } from "./service/sessionWs";
 
 export const wsServer = new ws.Server({ noServer: true });
 var i = 0
@@ -31,7 +31,6 @@ wsServer.on('connection', (socket: ISocket, req: IncomingMessage) => {
     );
     socket.room = getRoomNameOfUrl(req.url!)
 
-
     socket.on('message', message => {
         const event = JSON.parse(message.toString());
         const currentRoom = room.getRoomByName(socket.room);
@@ -51,10 +50,6 @@ wsServer.on('connection', (socket: ISocket, req: IncomingMessage) => {
     socket.on("finish_game", (currentRoom: room) => {
         currentRoom.finishGame();
     })
-
-    socket.on('emit_all', (message) => {
-
-    });
 
     socket.on("close", code => {
         const currentRoom = room.getRoomByName(socket.room)

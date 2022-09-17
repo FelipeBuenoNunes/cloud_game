@@ -8,11 +8,19 @@ import { getCardResponse } from "../models/messageServer/getCard"
 const suits = ["C", "H", "S", "D"];
 const cardsValue = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Q", "J", "K", "A"];
 
-const deckCards: string[][] = new Array<string[]>(56);
+const deckCards: string[][] = new Array<string[]>(56*4);
 //forEach to generate the deck cars
-suits.forEach((suit, idSuits) => {
-    const cont = idSuits * cardsValue.length
-    cardsValue.forEach((cardValue, id) => deckCards[cont + id] = [cardValue, suit]);
+
+suits.forEach((suit, idSuit) => {
+    cardsValue.forEach((cardValue, idCard) => {
+        const cardIndex = ((idSuit * cardsValue.length) + idCard)*4;
+        let index = 0;
+        //console.log(cardIndex)
+        while(index < 4){
+            deckCards[cardIndex+index] = [cardValue, suit] 
+            index++;
+        }
+    })
 });
 
 export class logicGame {
@@ -23,12 +31,11 @@ export class logicGame {
 
     constructor(usersId: string[]) {
         this.qtdPlayers = this.createPlayers(usersId); //create players
-        this.embaralha(); //Random deck cards
-        //console.log(this.deckCards)
+        this.shuffle(); //Random deck cards
         this.startGame();
     }
 
-    private embaralha() {
+    private shuffle() {
         const cards = deckCards.slice(); //copy array
         cards.forEach((_, id) => {
             const randomId = randomInt(cards.length);
@@ -37,14 +44,14 @@ export class logicGame {
         this.deckCards = cards;
     }
 
-    private createPlayers(players: string[]): number {
-        if (players.length < 1) return 0;
+    private createPlayers(playersId: string[]): number {
+        if (playersId.length < 1) return 0;
 
         let qtdPlayers = 0;
         let currentPlayer: playerGame, firstPlayer: playerGame; //current and first player to do linked list
 
         //For each to do linked list
-        players.forEach(playerId => {
+        playersId.forEach(playerId => {
             const newPlayer: playerGame = {
                 id: playerId,
                 cards: new Array<string[]>,
@@ -140,6 +147,7 @@ export class logicGame {
                 idUser: this.players.id,
                 playerWon: (playerWon) ? "PLAYER" : (valuePlayer === valueDealer) ? "DRAW" : "DEALER"
             }
+            this.players = this.players.next!;
         }
 
         return result

@@ -6,8 +6,8 @@ export class walletService {
         return await Tochinko.getBalance(publicKey);
     }
 
-    public async minttoken(publicKey: string, qtd: number): Promise<boolean> {
-        return await Tochinko.minttoken(publicKey, qtd);
+    public async mintToken(publicKey: string, qtd: number): Promise<boolean> {
+        return await Tochinko.mintToken(publicKey, qtd);
     }
 
     public async burntoken(publicKey: string, qtd: number): Promise<boolean> {

@@ -12,7 +12,7 @@ export class mintToken {
         try {
             const data: mintTokenData = req.body;
             const cookieService: sessionServices = res.locals.sessionClass;
-            const success = await new walletService().minttoken(cookieService.get().publicKey, data.amount);
+            const success = await new walletService().mintToken(cookieService.get().publicKey, data.amount);
             const response: walletSuccessResponse = { success };
 
             res.json(response);

@@ -4,7 +4,7 @@ export class Tochinko {
 
     private static contract = Contract.getContract();
 
-    public static async minttoken(publicKey: string, qtd: number): Promise<boolean> {
+    public static async mintToken(publicKey: string, qtd: number): Promise<boolean> {
         try {
             await Tochinko.contract.mint(publicKey, qtd);
             return true
