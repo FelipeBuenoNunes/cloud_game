@@ -8,8 +8,10 @@ import SumCards from "./elements/SumCards";
 
 const exArr = [
   ["K", "H"],
+  ["J", "C"],
   ["J", "S"],
-  ["J", "S"],
+  ["A", "D"],
+
 ]
 
 const SinglePlayer = ({ arrayCards, className, positionLeft, mainPlayer }) => {
