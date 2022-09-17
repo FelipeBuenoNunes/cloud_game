@@ -14,7 +14,7 @@ export class validateUser {
     }
 
     private async validateSession(): Promise<boolean> {
-        const session = await sessionServices.createWithCookie(this.cookie);
+        const session = await sessionServices.getWithCookie(this.cookie);
         if (!session) return false;
         this.session = session;
         return true;

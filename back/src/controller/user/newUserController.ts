@@ -13,7 +13,7 @@ export default class createUser {
             const userManipulator = new newUser();
             const user = await userManipulator.insertUser(newUserData);
             
-            const session = new sessionControls(user.id, user.wallet_public_key);
+            const session = new sessionControls(user.id, user.wallet_public_key, user.name);
 
             res.cookie(sessionControls.cookieName, session.getID(), { expires: session.getExpires() })
             res.status(200).end();

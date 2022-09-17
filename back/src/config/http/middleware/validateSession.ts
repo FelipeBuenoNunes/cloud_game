@@ -35,6 +35,6 @@ export class validateSession {
     }
 
     private async validateCookie() {
-        this.obj = await sessionServices.createWithCookie(this.cookie!) || undefined
+        this.obj = await sessionServices.getWithCookie(this.cookie!) || undefined
     }
 }

@@ -23,7 +23,7 @@ export class startSessionWs {
         
         if(!idSession) return false;
 
-        const session = await sessionServices.createWithCookie(idSession);
+        const session = await sessionServices.getWithCookie(idSession);
         if(!session) return false;
 
         this.session = session;
