@@ -1,3 +1,4 @@
+import { patternMessage } from "../models/messageServer/patterResponse";
 import { ISocket } from "../models/wSocket";
 import { logicGame } from "./gameLogic";
 
@@ -45,7 +46,6 @@ export class room {
     constructor(name: string, user: ISocket) {
         this.users = [user]; //first user
         this.name = name;
-        this.game = new logicGame(this.users.map(user => user.idUser));
         room.rooms.set(this.name, this);
     }
 
@@ -57,6 +57,18 @@ export class room {
         };
         this.users.push(user);
         return true;
+    }
+
+    public startGame() {
+        this.game = new logicGame(this.users.map(user => user.idUser));
+    }
+
+    public finishGame() {
+        const result = this.game.finishedGame()
+        this.emitAll({
+            name: "finish_game",
+            data: result
+        });
     }
 
     public exit(idUser: string): boolean {
@@ -71,8 +83,19 @@ export class room {
     }
 
     public getCard(user: string) {
-        return this.game.getCard(user);
+        const getCardResponse = this.game.getCard(user);
+        this.emitAll({
+            name: "get_card",
+            data: getCardResponse
+        });
+        return getCardResponse.nextPlayerId !== "";
     }
 
     public getUsers = () => this.users;
+
+    private emitAll<Type>(message: patternMessage<Type>) {
+        this.users.forEach( user => {
+            user.send(JSON.stringify(message));
+        })               
+    }
 }

@@ -40,9 +40,21 @@ wsServer.on('connection', (socket: ISocket, req: IncomingMessage) => {
     })
 
     socket.on("get_card", (currentRoom: room) => {
-        const userHand = currentRoom.getCard(socket.idUser);
-        socket.send(JSON.stringify(userHand))
+        const finished = currentRoom.getCard(socket.idUser);
+        if(!finished) socket.emit("finish_game", currentRoom)
     })
+
+    socket.on("start_game", (currentRoom: room) => {
+        currentRoom.startGame();
+    })
+
+    socket.on("finish_game", (currentRoom: room) => {
+        currentRoom.finishGame();
+    })
+
+    socket.on('emit_all', (message) => {
+
+    });
 
     socket.on("close", code => {
         const currentRoom = room.getRoomByName(socket.room)

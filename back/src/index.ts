@@ -18,6 +18,7 @@ const server = app.listen(
     () => console.log(`http://localhost:${config.PORT}`)
 );
 
+setInterval(() => console.log(process.memoryUsage().heapUsed / 1024 / 1024), 10000)
 
 server.on('upgrade', (request, socket, head) => {
     wsServer.handleUpgrade(request, socket, head, s => {

@@ -1,7 +1,9 @@
 import { randomInt } from "crypto";
+import { dealer } from "../models/game/dealer";
 import { playerGame } from "../models/game/playerGame";
 import { playerGameToFront } from "../models/game/playerToFront";
-import { getCardResponse } from "../models/response/getCard"
+import { resultPlayers } from "../models/game/result";
+import { getCardResponse } from "../models/messageServer/getCard"
 
 const suits = ["C", "H", "S", "D"];
 const cardsValue = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Q", "J", "K", "A"];
@@ -14,8 +16,20 @@ suits.forEach((suit, idSuits) => {
 });
 
 export class logicGame {
+    private players: playerGame;
+    private deckCards: string[][];
+    private qtdPlayers: number;
+    private dealerHand: dealer = { cards: new Array<string[]>, value: 0 }
+
+    constructor(usersId: string[]) {
+        this.qtdPlayers = this.createPlayers(usersId); //create players
+        this.embaralha(); //Random deck cards
+        //console.log(this.deckCards)
+        this.startGame();
+    }
+
     private embaralha() {
-        const cards = deckCards.slice();
+        const cards = deckCards.slice(); //copy array
         cards.forEach((_, id) => {
             const randomId = randomInt(cards.length);
             [cards[id], cards[randomId]] = [cards[randomId], cards[id]];
@@ -24,9 +38,8 @@ export class logicGame {
     }
 
     private createPlayers(players: string[]): number {
-        if(players.length < 1) return 0;
-        
-        players = players.reverse(); // reverse players forever first start
+        if (players.length < 1) return 0;
+
         let qtdPlayers = 0;
         let currentPlayer: playerGame, firstPlayer: playerGame; //current and first player to do linked list
 
@@ -37,13 +50,13 @@ export class logicGame {
                 cards: new Array<string[]>,
                 bet: 0,
                 finished: false,
-                valueA1:0,
-                valueA11:0,
+                valueA1: 0,
+                valueA11: 0,
                 next: undefined
             }
-            if(currentPlayer) newPlayer.next = currentPlayer;
+            if (currentPlayer) currentPlayer.next = newPlayer;
             else firstPlayer = newPlayer;
-            
+
             currentPlayer = newPlayer;
             qtdPlayers++;
         })
@@ -52,49 +65,112 @@ export class logicGame {
         return qtdPlayers;
     }
 
-    private players: playerGame;
-    private deckCards: string[][];
-    private qtdPlayers: number;
 
-    constructor(usersId: string[]) {
-        this.qtdPlayers = this.createPlayers(usersId); //create players
-        this.embaralha(); //Random deck cards
-        console.log(this.deckCards)
+    public startGame() {
+        this.distributeCards();
     }
 
-    private updateHand(players: playerGame) {
-        const newCard = players.cards[players.cards.length - 1]
-        if (newCard[0] === "A") {
-            players.valueA1 += 1;
-            players.valueA11 += 11;
-        } else {
-            const num = Number(newCard[0])
-            const value = isNaN(num) ? 10 : num;
-            players.valueA1 += value;
-            players.valueA11 += value;
+    private distributeCards() {
+        for (let i = 0; i < this.qtdPlayers; i++) {
+            this.players.cards.push(this.deckCards.pop()!);
+            this.updateHand();
+            this.players.cards.push(this.deckCards.pop()!);
+            this.updateHand();
+            this.players = this.players.next!
         }
-
-        if (players.valueA1 >= 21) players.finished = true;
-    }
-
-    private nextPlayer() { 
-        for(let i = 0; i <= 5; i++) {
-            this.players = this.players.next!;
-            if(!this.players.finished) return true;
-        }
-        return false;
+        this.dealerHand.cards.push(...this.deckCards.splice(this.deckCards.length - 2, this.deckCards.length - 1)!);
     }
 
     //private getPlayer = (id: string) => this.players.get(id);
 
     public getCard(userId: string): getCardResponse {
         if (this.players.finished) throw "User cannot get card";
+        if (this.players.id !== userId) throw "User cannot get card now";
 
         this.players.cards.push(this.deckCards.pop()!); //Add card
-        this.updateHand(this.players);
+        this.updateHand();
+
+        const currentPlayer = this.players;
+        const next = this.nextPlayer();
         return {
-            playerGame: playerGameToFront(this.players),
-            nextPlayerId: this.nextPlayer() ? this.players.id : ""
+            playerGame: playerGameToFront(currentPlayer),
+            nextPlayerId: next ? this.players.id : ""
         }
+    }
+
+    private updateHand(players = this.players) {
+        let hasCard11 = players.valueA1 !== players.valueA11; //Is there an ÁS?
+        const valueNewCard = this.valueCard(players.cards[players.cards.length - 1][0]); //get value card
+
+        players.valueA1 += valueNewCard[0];
+        players.valueA11 += (!hasCard11 && valueNewCard.length > 1) ? valueNewCard[1] : valueNewCard[0];
+
+        if (players.valueA1 >= 21) players.finished = true;
+    }
+
+    private valueCard(card: string): number[] {
+        if (card === "A") return [1, 11];
+        const num = Number(card)
+        return [isNaN(num) ? 10 : num];
+    }
+
+    private nextPlayer() {
+        for (let i = 0; i <= this.qtdPlayers; i++) {
+            this.players = this.players.next!;
+            if (!this.players.finished) return true;
+        }
+        return false;
+    }
+
+
+    public finishedGame() {
+        this.dealer();
+        return this.whoWon();
+    }
+
+    private whoWon(): resultPlayers[] {
+        const result = new Array<resultPlayers>(this.qtdPlayers);
+        for (let i = 0; i < this.qtdPlayers; i++) {
+            const valuePlayer = (this.players.valueA11 >= this.players.valueA1) ?
+                this.players.valueA11 : this.players.valueA1;
+            const valueDealer = this.dealerHand.value;
+
+            const playerWon = (valuePlayer > valueDealer && valuePlayer < 21) || (valueDealer > 21 && valuePlayer < valueDealer);
+            result[i] = {
+                idUser: this.players.id,
+                playerWon: (playerWon) ? "PLAYER" : (valuePlayer === valueDealer) ? "DRAW" : "DEALER"
+            }
+        }
+
+        return result
+    }
+
+    private dealer() {
+        const minDealer = this.minDealer();
+        while (this.dealerContinues(minDealer))
+            this.dealerHand.cards.push(this.deckCards.pop()!);
+
+        return;
+    }
+
+    private minDealer() {
+        for (let i = 0; i < this.qtdPlayers; i++) {
+            const v11 = (this.players.valueA11 <= 21 && this.players.valueA11 > 17);
+            const v1 = (this.players.valueA1 <= 21 && this.players.valueA1 > 17);
+            if (v11 || v1) return 17;
+            this.players = this.players.next!;
+        }
+        return 0;
+    }
+
+    private dealerContinues(minDealer: number): boolean {
+        let valueA1 = 0, valueA11 = 0;
+        this.dealerHand.cards.forEach(card => {
+            const valueCard = this.valueCard(card[0]);
+            valueA1 += valueCard[0];
+            valueA11 += (valueA1 === valueA11 && valueCard.length > 1) ? valueCard[1] : valueCard[0];
+        })
+        this.dealerHand.value = (valueA11 < 21) ? valueA11 : valueA1;
+        return !(valueA1 >= minDealer || valueA11 >= 18);
     }
 }
