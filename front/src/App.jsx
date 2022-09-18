@@ -1,20 +1,22 @@
-import Table from "./components/Table";
-import LoginPage from "./BaseLoginPage/LoginPage";
-import Login from "./BaseLoginPage/elements/ContainerLogin";
-import { Home } from "./components/Home";
+import Page404 from "./components/Page404";
 import { LoginCadastro } from "./components/LoginCadastro";
+import { Home } from "./components/Home";
+import Table from "./components/Table";
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+
 
 import "./input.css";
 
 function App() {
   return (
-    <div className=" w-screen h-screen">
-      {/* <Table /> */}
-      {/* <LoginPage /> */}
-      {/* <Login /> */}
-      {/* <Home /> */}
-      <LoginCadastro />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<LoginCadastro />} />
+        <Route path="/:userName/:id" element={<Home />} />
+        <Route path="/table" element={<Table />} />
+        <Route path="*" element={<Page404 />} />
+      </Routes>
+    </Router>
   );
 }
 
