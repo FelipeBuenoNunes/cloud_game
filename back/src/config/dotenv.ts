@@ -18,7 +18,8 @@ const config = {
     //BLOCKCHAIN
     ETHERS_PRIVATE_KEY: process.env.ETHERS_PRIVATE_KEY,
     CONTRACT_ADDRESS: process.env.CONTRACT_ADDRESS,
-    SECRET_MESSAGE: process.env.SECRET_MESSAGE
+    SECRET_MESSAGE: process.env.SECRET_MESSAGE,
+    ABI_FOLDER: process.env.ABI_FOLDER!
 };
 
 // Object.values(config).forEach((value) => {
