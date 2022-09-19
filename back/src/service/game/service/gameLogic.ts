@@ -11,6 +11,7 @@ import { resultPlayers } from "../models/game/result";
 import { gameMessage } from "../models/messageServer/gameRunMessage";
 import { getCardResponse } from "../models/messageServer/getCard"
 import { nextPlayer } from "../models/messageServer/nextPlayer";
+import { room } from "./room";
 
 const suits = ["C", "H", "S", "D"];
 const cardsValue = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Q", "J", "K"];
@@ -36,6 +37,7 @@ export class logicGame {
     private dealerHand: dealer = { cards: new Array<string[]>, value: 0 }
     private confirmedPlayers: playerBet[] = [];
     public isGameRunning: boolean = false;
+    private timeToActionPlayer: NodeJS.Timeout;
 
     constructor() {
         this.shuffle(); //Random deck cards
@@ -113,6 +115,7 @@ export class logicGame {
             players.push(await playerGameToFront(this.players));
             this.players = this.players.next!;
         }
+        this.actionPlayer(40);
         return {
             isRunning: true,
             playerTurn: players[0].name,
@@ -140,12 +143,19 @@ export class logicGame {
 
         this.players.cards.push(this.deckCards.pop()!); //Add card
         this.updateHand();
+        this.hasCard();
 
         const currentPlayer = this.players;
         const next = this.nextPlayer();
         return {
             playerGame: await playerGameToFront(currentPlayer),
             nextPlayerName: next ? this.players.name : ""
+        }
+    }
+
+    private hasCard() {
+        if(this.deckCards.length === 0) {
+            this.shuffle();
         }
     }
 
@@ -166,8 +176,12 @@ export class logicGame {
     }
 
     private nextPlayer() {
+        this.actionPlayer(5);
         if (!this.players.finished) return true;
         this.players = this.players.next!;
+        if(this.players.finished) {
+            clearTimeout(this.timeToActionPlayer);
+        }
         return !this.players.finished;
     }
 
@@ -203,7 +217,15 @@ export class logicGame {
     public finishedGame() {
         this.dealer();
         this.isGameRunning = false;
-        return this.whoWon();
+        const whoWon =  this.whoWon();
+        this.resetGame();
+        return whoWon;
+    }
+
+    private resetGame() {
+        this.confirmedPlayers = [];
+        this.dealerHand.cards = [];
+        this.dealerHand.value = 0;
     }
 
     private whoWon(): finishedGame {
@@ -231,7 +253,10 @@ export class logicGame {
         }
         this.paymentBet(paymentsData);
         return {
-            dealerHand: this.dealerHand,
+            dealerHand: {
+                cards: this.dealerHand.cards,
+                value: this.dealerHand.value
+            },
             results: result
         }
     }
@@ -276,6 +301,16 @@ export class logicGame {
     public async couldDoBet(idUser: string, possibleBet: number): Promise<boolean> {
         const publicKey = (await sessionServices.getWithCookie(idUser))!.get().publicKey;
         return possibleBet <= await Tochinko.getBalance(publicKey);
+    }
+
+    private async actionPlayer(seconds: number) {
+        clearTimeout(this.timeToActionPlayer);
+        const roomId = (await sessionServices.getWithCookie(this.players.id))?.get().gameSessionId!
+        this.timeToActionPlayer = setTimeout(() => {
+            room.getRoomById(roomId)!.
+                stop(this.players.id);
+            
+        }, seconds*1000)
     }
 
 }
