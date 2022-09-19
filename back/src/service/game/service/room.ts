@@ -1,5 +1,8 @@
 import { randomUUID } from "crypto";
+import { Tochinko } from "../../contract/tochinko";
+import sessionServices from "../../session/sessionServices";
 import { playerBet } from "../models/game/playerBet";
+import { errorMessage, InsufficientMoney } from "../models/messageServer/errorMessage";
 import { patternMessage } from "../models/messageServer/patterResponse";
 import { ISocket } from "../models/wSocket";
 import { logicGame } from "./gameLogic";
@@ -48,12 +51,55 @@ export class room {
     }
 
     public async placeBet(player: playerBet) {
+        if(!await this.game.couldDoBet(player.idPlayer, player.bet)) return InsufficientMoney;
         if (await this.game.checkInPlayer(player)) {
             this.emitAll({
                 name: "datas",
                 data: await this.game.generateInitSetup()
             });
         }
+    }
+
+    public async getCard(user: string) {
+        const getCardResponse = await this.game.getCard(user);
+        this.emitAll({
+            name: "get_card",
+            data: getCardResponse
+        });
+        if(getCardResponse.nextPlayerName === "") this.finishRound();
+    }
+
+    public async doubleBet(user: string) {
+        const getCardResponse = await this.game.doubleBet(user);
+        this.emitAll({
+            name: "get_card",
+            data: getCardResponse
+        })
+        if(getCardResponse.nextPlayerName === "") this.finishRound();
+    }
+
+    public async stop(user: string) {
+        const getCardResponse = await this.game.stop(user);
+        this.emitAll({
+            name: "get_card",
+            data: getCardResponse
+        })
+        if(getCardResponse.nextPlayerName  === "") this.finishRound();
+    }
+    
+    private emitAll<Type>(message: patternMessage<Type>) {
+        this.users.forEach(user => {
+            user.send(JSON.stringify(message));
+        })
+    }
+
+
+    private finishRound() {
+        const result = this.game.finishedGame()
+        this.emitAll({
+            name: "finish_game",
+            data: result
+        });
     }
 
     public exit(idUser: string): boolean {
@@ -67,39 +113,6 @@ export class room {
         }
         return false;
     }
-
-    public async getCard(user: string) {
-        const getCardResponse = await this.game.getCard(user);
-        this.emitAll({
-            name: "get_card",
-            data: getCardResponse
-        });
-        if(getCardResponse.nextPlayerId === "") this.finishRound();
-    }
-
-    public async doubleBet(user: string) {
-        const getCardResponse = await this.game.doubleBet(user);
-        this.emitAll({
-            name: "get_card",
-            data: getCardResponse
-        })
-        if(getCardResponse.nextPlayerId === "") this.finishRound();
-    }
-    
-    private emitAll<Type>(message: patternMessage<Type>) {
-        this.users.forEach(user => {
-            user.send(JSON.stringify(message));
-        })
-    }
-
-    private finishRound() {
-        const result = this.game.finishedGame()
-        this.emitAll({
-            name: "finish_game",
-            data: result
-        });
-    }
-
 
     public getUsers = () => this.users;
 }

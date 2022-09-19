@@ -1,6 +1,6 @@
-type possiblesResults = "PLAYER" | "DEALER" | "DRAW"
+type possiblesResults = "PLAYER" | "DEALER" | "DRAW";
 
 export interface resultPlayers {
-    idUser: string
-    playerWon: possiblesResults
+    name: string
+    whoWon: possiblesResults
 }

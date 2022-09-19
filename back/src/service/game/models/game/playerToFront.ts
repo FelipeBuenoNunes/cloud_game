@@ -13,7 +13,7 @@ export interface playerToFront {
 export async function playerGameToFront(player: playerGame): Promise<playerToFront> {
     return {
         cards: player.cards,
-        name: (await sessionServices.getWithCookie(player.id))!.get().name,
+        name: player.name,
         bet: player.bet,
         valueA11: player.valueA11,
         valueA1: player.valueA1,

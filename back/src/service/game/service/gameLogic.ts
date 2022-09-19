@@ -1,32 +1,33 @@
 import { randomInt } from "crypto";
+import { Tochinko } from "../../contract/tochinko";
+import sessionServices from "../../session/sessionServices";
 import { dealer } from "../models/game/dealer";
+import { finishedGame } from "../models/game/finishedGame";
+import { finishedGameData } from "../models/game/finishedGameData";
 import { playerBet } from "../models/game/playerBet";
 import { playerGame } from "../models/game/playerGame";
 import { playerGameToFront, playerToFront } from "../models/game/playerToFront";
 import { resultPlayers } from "../models/game/result";
 import { gameMessage } from "../models/messageServer/gameRunMessage";
 import { getCardResponse } from "../models/messageServer/getCard"
+import { nextPlayer } from "../models/messageServer/nextPlayer";
 
 const suits = ["C", "H", "S", "D"];
-const cardsValue = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Q", "J", "K", "A"];
+const cardsValue = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "Q", "J", "K"];
 
-const deckCards: string[][] = new Array<string[]>(56*4);
+const deckCards: string[][] = new Array<string[]>(52 * 4);
+
 //forEach to generate the deck cars
-
 suits.forEach((suit, idSuit) => {
     cardsValue.forEach((cardValue, idCard) => {
-        const cardIndex = ((idSuit * cardsValue.length) + idCard)*4;
+        const cardIndex = ((idSuit * cardsValue.length) + idCard) * 4;
         let index = 0;
-        while(index < 4){
-            deckCards[cardIndex+index] = [cardValue, suit] 
+        while (index < 4) {
+            deckCards[cardIndex + index] = [cardValue, suit]
             index++;
         }
     })
 });
-
-// function waitingSeconds(seconds: number) {
-//     return new Promise()
-// }
 
 export class logicGame {
     private players: playerGame;
@@ -49,17 +50,18 @@ export class logicGame {
         this.deckCards = cards;
     }
 
-    public checkInPlayer(player: playerBet): Promise<true>|null {
+    public checkInPlayer(player: playerBet): Promise<true> | null {
+        if(this.isGameRunning) return null; //todo
         this.confirmedPlayers.push(player);
-        if(this.confirmedPlayers.length === 1) {
+        if (this.confirmedPlayers.length === 1) {
             return new Promise((resolve: any) => {
-                setTimeout( async() => {
+                setTimeout(async () => {
                     this.startRound();
                     resolve(true);
                 }, 5000)
             })
         }
-        return null;
+        return null
     }
 
     private startRound() {
@@ -76,6 +78,7 @@ export class logicGame {
         this.confirmedPlayers.forEach(player => {
             const newPlayer: playerGame = {
                 id: player.idPlayer,
+                name: player.name,
                 cards: new Array<string[]>,
                 bet: player.bet,
                 finished: false,
@@ -106,17 +109,27 @@ export class logicGame {
 
     public async generateInitSetup(): Promise<gameMessage> {
         const players: playerToFront[] = []
-        for(let i = 0; i < this.qtdPlayers; i++) {
+        for (let i = 0; i < this.qtdPlayers; i++) {
             players.push(await playerGameToFront(this.players));
             this.players = this.players.next!;
-            console.log(this.players)
         }
         return {
-            isRunning: true, 
+            isRunning: true,
             playerTurn: players[0].name,
             players: players,
-            dealer: this.dealerHand,
-        }        
+            dealer: this.showFirstDealerCard(this.dealerHand),
+        }
+    }
+
+    private showFirstDealerCard(currentDealer: dealer): dealer {
+        let value: number = Number(currentDealer.cards[0][0])
+        if (isNaN(value))
+            value = currentDealer.cards[0][0] === "A" ? 11 : 10
+
+        return {
+            cards: [currentDealer.cards[0]],
+            value: value
+        }
     }
 
     //private getPlayer = (id: string) => this.players.get(id);
@@ -132,7 +145,7 @@ export class logicGame {
         const next = this.nextPlayer();
         return {
             playerGame: await playerGameToFront(currentPlayer),
-            nextPlayerId: next ? this.players.id : ""
+            nextPlayerName: next ? this.players.name : ""
         }
     }
 
@@ -153,7 +166,7 @@ export class logicGame {
     }
 
     private nextPlayer() {
-        if(!this.players.finished) return true;
+        if (!this.players.finished) return true;
         this.players = this.players.next!;
         return !this.players.finished;
     }
@@ -161,6 +174,7 @@ export class logicGame {
     public async doubleBet(userId: string): Promise<getCardResponse> {
         if (this.players.finished) throw "User cannot get card";
         if (this.players.id !== userId) throw "User cannot get card now";
+        if (this.players.cards.length > 2) throw "User cannot double bet";
 
         this.players.cards.push(this.deckCards.pop()!); //add new card
         this.updateHand();
@@ -171,44 +185,68 @@ export class logicGame {
         const next = this.nextPlayer();
         return {
             playerGame: await playerGameToFront(currentPlayer),
-            nextPlayerId: next ? this.players.id : ""
+            nextPlayerName: next ? this.players.name : ""
         }
     }
 
+    public async stop(userId: string): Promise<nextPlayer> {
+        if (this.players.finished) throw "User cannot get card";
+        if (this.players.id !== userId) throw "User cannot get card now";
+
+        this.players.finished = true;
+        const next = this.nextPlayer();
+        return {
+            nextPlayerName: next ? this.players.name : ""
+        }
+    }
 
     public finishedGame() {
         this.dealer();
+        this.isGameRunning = false;
         return this.whoWon();
     }
 
-    private whoWon(): resultPlayers[] {
+    private whoWon(): finishedGame {
         const result = new Array<resultPlayers>(this.qtdPlayers);
+        const paymentsData: finishedGameData[] = [];//object to payment players
         for (let i = 0; i < this.qtdPlayers; i++) {
-            const valuePlayer = (this.players.valueA11 >= this.players.valueA1) ?
-                this.players.valueA11 : this.players.valueA1;
+            const valuePlayer = (this.players.valueA11 <= 21) ? this.players.valueA11 : this.players.valueA1;
             const valueDealer = this.dealerHand.value;
-
+            
             const playerWon = (valuePlayer > valueDealer && valuePlayer <= 21) || (valueDealer > 21 && valuePlayer < valueDealer);
             result[i] = {
-                idUser: this.players.id,
-                playerWon: (playerWon) ? "PLAYER" : (valuePlayer === valueDealer) ? "DRAW" : "DEALER"
+                name: this.players.name,
+                whoWon: (playerWon) ? "PLAYER" : (valuePlayer === valueDealer) ? "DRAW" : "DEALER"
             }
+
+            //object to payment players
+            if (result[i].whoWon !== "DRAW")
+                paymentsData.push({
+                    player: this.players.id,
+                    playerWon: result[i].whoWon === "PLAYER",
+                    value: this.players.bet
+                });
+
             this.players = this.players.next!;
         }
-
-        return result
+        this.paymentBet(paymentsData);
+        return {
+            dealerHand: this.dealerHand,
+            results: result
+        }
     }
 
     private dealer() {
         const minDealer = this.minDealer();
-        while (this.dealerContinues(minDealer))
+        while (this.dealerContinues(minDealer)) {
             this.dealerHand.cards.push(this.deckCards.pop()!);
+        }
     }
 
     private minDealer() {
         for (let i = 0; i < this.qtdPlayers; i++) {
-            const v11 = (this.players.valueA11 <= 21 && this.players.valueA11 > 17);
-            const v1 = (this.players.valueA1 <= 21 && this.players.valueA1 > 17);
+            const v11 = (this.players.valueA11 <= 21);
+            const v1 = (this.players.valueA1 <= 21);
             if (v11 || v1) return 17;
             this.players = this.players.next!;
         }
@@ -223,6 +261,21 @@ export class logicGame {
             valueA11 += (valueA1 === valueA11 && valueCard.length > 1) ? valueCard[1] : valueCard[0];
         })
         this.dealerHand.value = (valueA11 < 21) ? valueA11 : valueA1;
-        return !(valueA1 >= minDealer || valueA11 >= 18);
+        return !(valueA1 >= minDealer || valueA11 >= 17);
     }
+
+    //Function to payments all bets
+    private async paymentBet(finishedsData: finishedGameData[]) {
+        for (let finishedData of finishedsData) {
+            const publicKey = (await sessionServices.getWithCookie(finishedData.player))!.get().publicKey;
+            if (finishedData.playerWon) await Tochinko.mintToken(publicKey, finishedData.value); //"dealer" pay to the player
+            else await Tochinko.burntoken(publicKey, finishedData.value); //player pay to the "dealer"
+        }
+    }
+
+    public async couldDoBet(idUser: string, possibleBet: number): Promise<boolean> {
+        const publicKey = (await sessionServices.getWithCookie(idUser))!.get().publicKey;
+        return possibleBet <= await Tochinko.getBalance(publicKey);
+    }
+
 }

@@ -1,4 +1,5 @@
 export interface playerBet {
-    idPlayer: string,
+    idPlayer: string
+    name: string
     bet: number
 }
