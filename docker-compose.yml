@@ -8,8 +8,8 @@ services:
       - .env
     ports:
       - "5433:5432"
-    volumes: 
-    #   - ./postgres_data:/var/lib/postgresql/data
+    volumes:
+      #   - ./postgres_data:/var/lib/postgresql/data
       - ./back/db_files/db_tables_setup.sql:/docker-entrypoint-initdb.d/dbinit.sql
     restart: always
     networks:
@@ -22,7 +22,7 @@ services:
     env_file:
       - .env
     ports:
-      - "8000:80"
+      - "8888:88"
     # volumes:
     #   - pgadmin-data:/var/lib/pgadmin
     depends_on:

@@ -1,13 +1,23 @@
+import Page404 from "./components/Page404";
+import { LoginCadastro } from "./components/LoginCadastro";
+import { Home } from "./components/Home";
 import Table from "./components/Table";
-import "./input.css";
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-const children = 'asdfasldfasdfqq';
+
+import "./input.css";
 
 function App() {
   return (
-    <div className=" w-screen h-screen">
-      <Table  />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/login" element={<LoginCadastro />} />
+        {/* <Route path="/:personalWallet" element={<Home />} /> */}
+        <Route path="/" element={<Home />} />
+        <Route path="/table" element={<Table />} />
+        <Route path="*" element={<Page404 />} />
+      </Routes>
+    </Router>
   );
 }
 

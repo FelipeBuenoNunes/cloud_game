@@ -8,15 +8,20 @@ import SumCards from "./elements/SumCards";
 
 const exArr = [
   ["K", "H"],
+  ["J", "C"],
   ["J", "S"],
-  ["J", "S"],
+  ["A", "D"],
+
 ]
 
-const SinglePlayer = ({ arrayCards, className, positionLeft, mainPlayer }) => {
+const SinglePlayer = ({ arrayCards, className, positionLeft, mainPlayer, name = "" }) => {
   const containerCards = positionLeft ? 'order-2' : '';
   const containerImage = positionLeft ? 'order-1' : '';
   const MainPlayer = mainPlayer ? 'flex flex-col' : '';
   const overflowX = mainPlayer ? 'flex-nowrap max-w-[300px]' : '';
+
+  const primeiraLetra = name[0].toUpperCase();
+  console.log(primeiraLetra);
 
   return (
     <section className={` flex flex-row justify-center items-center ${className} ${MainPlayer}`} >
@@ -27,7 +32,10 @@ const SinglePlayer = ({ arrayCards, className, positionLeft, mainPlayer }) => {
 
       <div className={`flex flex-col items-center gap-x-1 ${containerImage} `} >
         <BetChips valueBet={100} />
-        <ImagePlayer />
+        <div className="flex flex-row bg-NTblue px-4 py-2 rounded-full" >
+          <p className="text-BJblack font-bold text-2xl" >{primeiraLetra}</p>
+          {/* <ImagePlayer /> */}
+        </div>
         <Chips value="12.000" />
       </div>
     </section>

@@ -4,8 +4,11 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^6.4.5",
+    "@types/react": "^18.0.20",
+    "ethers": "^5.7.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.0",
     "react-scripts": "5.0.1",
     "request": "^2.88.2",
     "server": "^1.0.37"

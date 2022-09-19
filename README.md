@@ -39,7 +39,9 @@ Run the following command to connect to the database(redis) with redis-cli
 You need to fill all environment variables 
 
 ```
-docker-compose up
+systemctl start docker
+
+docker compose up
 ```
 
 > tip: This command may get an error if this happens, you could try running the following command.
