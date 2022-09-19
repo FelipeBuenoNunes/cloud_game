@@ -12,7 +12,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<LoginCadastro />} />
-        <Route path="/:userName/:id" element={<Home />} />
+        {/* <Route path="/:personalWallet" element={<Home />} /> */}
+        <Route path="/" element={<Home />} />
         <Route path="/table" element={<Table />} />
         <Route path="*" element={<Page404 />} />
       </Routes>

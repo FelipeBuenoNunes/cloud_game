@@ -1,18 +1,28 @@
-// import Header from "../Header";
-// import ContainerDealer from "../ContainerDealer";
-// import ContainerPlayer from "../ContainerPlayer";
-// import ContainerButtons from "./elements/ContainerButtons";
+import { Header } from '../Header';
+import { ContainerDealer, ContainerPlayer, ContainerButtons } from './elements';
 
-import { Header, ContainerDealer, ContainerPlayer, ContainerButtons } from './elements';
+const exArr = [
+  ["A", "H"],
+  ["A", "H"],
+  ["A", "S"],
+  ["A", "C"],
+  ["A", "D"],
+  ["A", "H"],
+  ["A", "S"],
+  ["A", "C"],
+  ["A", "D"],
+  ["A", "H"],
+  ["A", "S"],
+]
 
 const Table = ({ children }) => {
   return (
     <>
       <section className="bg-boardMobile bg-no-repeat bg-cover object-contain bg-center w-screen h-screen flex flex-col md:bg-boardDesktop">
-        <Header className={`h-[10%] md:5%`} />
-        <ContainerDealer className={`h-[10%] md:5%`} />
+        <Header className={`h-[5%] md:h-[10%]`} arr />
+        <ContainerDealer className={`h-[10%] md:h-[15%] md:mb-16`} arrCards={exArr} />
         <ContainerPlayer className={``} />
-        <ContainerButtons className={`h-[10%] md:5%`} />
+        <ContainerButtons className={`h-[5%] md:h-[10%]`} />
       </section>
     </>
   );

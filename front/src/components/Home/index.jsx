@@ -1,25 +1,17 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { Header } from '../Header';
 
 const Home = () => {
   const navigation = useNavigate();
   const { userName, id } = useParams();
 
   return (
-    <section className='w-screen h-screen' >
-      <header className=' bg-red-400  flex flex-row justify-evenly' >
-        <div className='flex flex-row justify-around' >
-          <button>exit |</button>
-          <button>som |</button>
-          <button>ajuda</button>
-        </div>
-        <p>Black Jack</p>
-        <p>12.000</p>
-        <p>{userName}</p>
-      </header>
+    <section className='bg-gradient-to-r from-green-100 to-white w-screen h-screen' >
+      <Header className={`h-[5%] md:h-[10%]`} />
 
-      <main className='w-full h-full flex flex-col justify-center items-center' >
-        <div className='bg-blue-300 w-[50vh] h-[50vh] max-w-[90%] flex flex-col justify-center items-center' >
-          <button className='bg-blue-900 text-white font-bold text-4xl rounded-lg px-4' onClick={() => { navigation('/table') }} >JOGAR</button>
+      <main className=' w-full h-[95%] md:h-[90%] flex flex-col justify-center items-center' >
+        <div className='bg-gradient-to-r from-green-300 via-green-500 to-green-700 w-[50vh] h-[50vh] max-w-[90%] flex flex-col justify-center items-center' >
+          <button className='bg-BJblue01 text-white font-bold text-4xl rounded-lg px-4' onClick={() => { navigation('/table') }} >JOGAR</button>
         </div>
       </main>
     </section>

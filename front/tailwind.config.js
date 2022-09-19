@@ -4,7 +4,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        BJgreen: "#09783B",
+        BJgreen01: "#09783B",
+        BJgreen02: "#038F13",
+        BJgreen03: "#288507",
+        BJgreen04: "#419356",
+        BJblue01: "#037785",
+        BJblue02: "#038F70",
+        BJbrown: "#440e0b",
         BJblack: "#222",
         BJwhite: "#eee",
       },
