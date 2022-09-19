@@ -7,7 +7,7 @@ const help = `${process.env.PUBLIC_URL}/assets/icons/help.png`;
 const Header = ({ className }) => {
   const navigation = useNavigate();
   return (
-    <section className={`bg-BJgreen04 mb-1 px-4 py-2 gap-x-1 flex flex-row justify-start items-center  ${className}`} >
+    <section className={`bg-gradient-to-r from-[#9a031e] to-BJblack mb-1 px-4 py-2 gap-x-1 flex flex-row justify-start items-center  ${className}`} >
       <button onClick={() => { navigation('/') }} >
         <img className="w-6 md:w-8" src={exit} alt="" />
       </button>

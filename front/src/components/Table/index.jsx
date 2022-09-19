@@ -14,6 +14,7 @@ const exArr = [
   ["A", "H"],
   ["A", "S"],
 ]
+// front/src/assets/table-02.png
 
 const Table = ({ children }) => {
   return (
