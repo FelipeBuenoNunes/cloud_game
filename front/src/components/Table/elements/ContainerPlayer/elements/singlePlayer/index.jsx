@@ -21,7 +21,6 @@ const SinglePlayer = ({ arrayCards, className, positionLeft, mainPlayer, name = 
   const overflowX = mainPlayer ? 'flex-nowrap max-w-[300px]' : '';
 
   const primeiraLetra = name[0].toUpperCase();
-  console.log(primeiraLetra);
 
   return (
     <section className={` flex flex-row justify-center items-center ${className} ${MainPlayer}`} >

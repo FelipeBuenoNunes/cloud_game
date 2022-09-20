@@ -58,16 +58,17 @@ const Home = () => {
       .catch(err => setError(err.message));
   };
 
-  const connectWS = () => {
-    const ws = new WebSocket(`wss://localhost:8080`, { Header: { "auth": document.cookie.split("=")[1] } });
-    ws.binaryType = "blob";
-    // Log socket opening and closing
-    ws.addEventListener("open", event => {
-      console.log("Websocket connection opened");
-      // navigation
-    });
-    ws.onopen = (e) => { socket.send("My name is John") };
-  };
+  // const connectWS = () => {
+  //   // cookie=value; pegase apenas o value do cookie.
+  //   const ws = new WebSocket(`wss://localhost:8080`, { Header: { "auth": document.cookie.split("=")[1] } });
+  //   ws.binaryType = "blob";
+  //   // Log socket opening and closing
+  //   ws.addEventListener("open", event => {
+  //     console.log("Websocket connection opened");
+  //     // navigation
+  //   });
+  //   // ws.onopen = (e) => { socket.send("My name is John") };
+  // };
 
   return (
     <section className='bg-[#ffdab9] w-screen h-screen' >
@@ -86,7 +87,7 @@ const Home = () => {
 
           <div className='backdrop-blur-[2px] bg-black/20 w-[50vh] h-[50vh] max-w-[90%] flex flex-col justify-center items-center gap-y-8' >
             <h1 className=' text-BJwhite font-bold text-4xl' >Dragon Jack</h1>
-            <button className='bg-NTgreenDark text-BJwhite font-bold text-3xl rounded-lg px-4 py-2' onClick={() => { connectWS }} >JOGAR</button>
+            <button className='bg-NTgreenDark text-BJwhite font-bold text-3xl rounded-lg px-4 py-2' onClick={() => { navigation('/table') }} >JOGAR</button>
           </div>
 
         </div>

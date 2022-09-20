@@ -22,10 +22,12 @@ const server = app.listen(
 setInterval(() => console.log(process.memoryUsage().heapUsed / 1024 / 1024), 10000)
 
 server.on('upgrade', async (request, socket, head) => {
+    const cookie = request.headers["sec-websocket-protocol"];
+    console.log(cookie);
     if (
-        request.headers.auth === undefined ||
-        typeof request.headers.auth !== "string" ||
-        !(await new validateUser(request.headers.auth).couldConnect())
+        cookie === undefined ||
+        typeof cookie !== "string" ||
+        !(await new validateUser(cookie).couldConnect())
     ) {
         socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
         socket.destroy();
