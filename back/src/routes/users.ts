@@ -1,4 +1,4 @@
-import { json, Router } from "express";
+import { json, Request, Response, Router } from "express";
 import { validateSession } from "../config/http/middleware/validateSession";
 import { getMessage, createUser, login, handshakeToken } from "../controller/user/index";
 import { PatternValidate } from "../config/http/middleware/parserAndValidate"
@@ -115,5 +115,10 @@ router.get("/handshake-tokem",
     new validateSession().middleware.bind(new validateSession()),
     new handshakeToken().handler.bind(new handshakeToken())
 )
+
+router.get("/infos", new validateSession().middleware.bind(new validateSession()),
+    (req: Request, res: Response) => {
+    res.json({name: res.locals.sessionClass.session.name});
+});
 
 export default router;

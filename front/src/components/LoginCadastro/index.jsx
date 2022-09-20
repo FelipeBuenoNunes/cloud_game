@@ -80,12 +80,12 @@ const LoginCadastro = () => {
             'Content-Type': 'application/json'
           })
         })
-          .then(res => res.json())
+          .then(res => res.status === 200 ? navigation('/') : console.log('nao deu bom'))
           .then(result => {
-            console.log(result);
-            console.log(navigation());
-            console.log(result.personalWallet);
-            navigation(`/`)
+            if (result) {
+              const personalWallet = result.personalWallet
+              navigation(`/${personalWallet}`);
+            }
             // localStorage.setItem('token', result.token);
           });
       })
@@ -104,10 +104,9 @@ const LoginCadastro = () => {
             'Content-Type': 'application/json'
           })
         })
-          .then(res => res.json())
+          .then(res => res.status === 200 ? navigation('/') : console.log('não deu bom o cadastro'))
           .then(result => {
             console.log(result);
-            navigation(`/`)
             // localStorage.setItem('token', result.token);
           })
           .catch(err => setError(err.message));
