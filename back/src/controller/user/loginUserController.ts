@@ -13,7 +13,7 @@ export default class login {
 
             const user = await login.getUser();
             if(!user.id) throw "Unspecified error";
-            const session = new sessionControls(user.id, user.wallet_public_key);
+            const session = new sessionControls(user.id, user.wallet_public_key, user.name);
             res.cookie(sessionControls.cookieName, session.getID(), { expires: session.getExpires() });
             res.status(200).end();
         }catch(e) {

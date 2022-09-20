@@ -4,7 +4,7 @@ import { config } from "./dotenv";
 
 export class Contract {
     private static provider = new ethers.providers.JsonRpcProvider();
-    private static abi = JSON.parse(readFileSync('/home/felipeollx/Documents/contract_pachinko/artifacts/contracts/Lock.sol/Tochinko.json').toString()).abi;
+    private static abi = JSON.parse(readFileSync(config.ABI_FOLDER).toString()).abi;
     private static contract: ethers.Contract
 
     public static connectContract(privateKey: string) {

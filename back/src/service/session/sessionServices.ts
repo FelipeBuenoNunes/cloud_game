@@ -8,12 +8,13 @@ export default class sessionServices {
     private idSession: string;
     private expires?: number;
 
-    constructor(idUser?: string, publicKey?: string) {
-        if (!idUser || !publicKey) return;
+    constructor(idUser?: string, publicKey?: string, name?: string) {
+        if (!idUser || !publicKey || !name) return;
 
         this.idSession = randomUUID();
         this.session = {
             idUser: idUser,
+            name: name,
             publicKey: publicKey,
             inGame: false
         }
@@ -24,7 +25,7 @@ export default class sessionServices {
         return await redis.get(cookie) != null;
     }
 
-    public static async createWithCookie(cookie: string): Promise<sessionServices | null> {
+    public static async getWithCookie(cookie: string): Promise<sessionServices | null> {
         const session = await redis.get(cookie);
         if (!session) return null
 
@@ -44,21 +45,26 @@ export default class sessionServices {
     }
     
     private refreshCookie() {
-        const timeSession = (this.session.inGame) ? 24*60 : 5*60
-        this.expires = (this.session.inGame) ? Date.now() + timeSession*1000 : Date.now() + timeSession*1000;
+        const timeSession = (this.session.inGame) ? (24*60)*60 : 5*60
+        this.expires = Date.now() + (24*60)*60*1000;
+        console.log(this.expires);
         return timeSession;
+    }
+
+    public async increaseSessiontime() {
+        await redis.setex(this.idSession, 24*60*60, JSON.stringify(this.session));
     }
 
     public updateSession(isGame?: boolean, gameSessionId?: string) {
         if(isGame && !gameSessionId) throw new Error("ARGUMENT INVALID");
         this.session = {
             idUser: this.session.idUser,
+            name: this.session.name,
             publicKey: this.session.publicKey,
             inGame: isGame || this.session.inGame,
             gameSessionId: gameSessionId
         }
         this.setSession();
     }
-
 
 }

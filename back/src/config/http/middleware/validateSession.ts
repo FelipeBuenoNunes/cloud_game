@@ -14,11 +14,11 @@ export class validateSession {
         this.path = req.path;
 
         const cookie = req.cookies;
-        if(!Object.keys(cookie).includes(sessionServices.cookieName)) return this.validateEndpoint()
+        if(!Object.keys(cookie).includes(sessionServices.cookieName)) return this.validateEndpoint(res)
         
         this.cookie = cookie[sessionServices.cookieName];
         await this.validateCookie();
-        if(!this.obj) return this.validateEndpoint();
+        if(!this.obj) return this.validateEndpoint(res);
         
         res.locals.sessionClass = this.obj;
         if(this.path === "/login") {
@@ -29,11 +29,12 @@ export class validateSession {
         this.nextFunction();
     }
 
-    private validateEndpoint() {
+    private validateEndpoint(res: Response) {
+        res.cookie(sessionServices.cookieName, "", { expires: new Date() });
         (this.path === "/login") ? this.nextFunction() : this.nextFunction(InvalidSession);
     }
 
     private async validateCookie() {
-        this.obj = await sessionServices.createWithCookie(this.cookie!) || undefined
+        this.obj = await sessionServices.getWithCookie(this.cookie!) || undefined
     }
 }
