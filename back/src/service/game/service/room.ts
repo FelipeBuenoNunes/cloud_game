@@ -40,13 +40,18 @@ export class room {
 
     private enter(user: ISocket): boolean {
         //If the room is full, close the connection
+        console.log(this.qtdPlayers)
         if (this.qtdPlayers >= 5) {
             user.close();
             return false
         };
         this.users.push(user);
         this.qtdPlayers++;
-
+        
+        this.emitAll({
+            name: "new_player",
+            data: this.users.map( user => user.name)
+        });
         return true;
     }
 
@@ -54,19 +59,23 @@ export class room {
         if(!await this.game.couldDoBet(player.idPlayer, player.bet)) return InsufficientMoney;
         if (await this.game.checkInPlayer(player)) {
             this.emitAll({
-                name: "datas",
+                name: "first_data",
                 data: await this.game.generateInitSetup()
             });
         }
     }
 
     public async getCard(user: string) {
-        const getCardResponse = await this.game.getCard(user);
-        this.emitAll({
-            name: "get_card",
-            data: getCardResponse
-        });
-        if(getCardResponse.nextPlayerName === "") this.finishRound();
+        try {
+            const getCardResponse = await this.game.getCard(user);
+            this.emitAll({
+                name: "get_card",
+                data: getCardResponse
+            });
+            if(getCardResponse.nextPlayerName === "") this.finishRound();
+        }catch(e) {
+            console.error(e);
+        }
     }
 
     public async doubleBet(user: string) {
@@ -104,6 +113,7 @@ export class room {
 
     public exit(idUser: string): boolean {
         //Is it empty? if yes, kill the room
+        console.log("MERDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         if (this.qtdPlayers === 1) return room.rooms.delete(this.id);
         for (const index in this.users) {
             if (this.users[index].idUser !== idUser) continue;

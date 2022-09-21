@@ -9,7 +9,7 @@ export const wsServer = new ws.Server({ noServer: true });
 
 wsServer.on('connection', (socket: ISocket, req: IncomingMessage) => {
 
-    sessionServices.getWithCookie(req.headers.auth as string)
+    sessionServices.getWithCookie(req.headers["sec-websocket-protocol"] as string)
         .then(session => {
             socket.idUser = session!.getID();
             socket.name = session!.get().name
@@ -18,6 +18,7 @@ wsServer.on('connection', (socket: ISocket, req: IncomingMessage) => {
         });
 
     socket.on('message', message => {
+        console.log(message)
         const event = JSON.parse(message.toString());
         const currentRoom = room.getRoomById(socket.idRoom);
         if (!currentRoom) return socket.close();

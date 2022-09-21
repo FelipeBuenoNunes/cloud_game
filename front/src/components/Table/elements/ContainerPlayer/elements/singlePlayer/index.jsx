@@ -14,23 +14,23 @@ const exArr = [
 
 ]
 
-const SinglePlayer = ({ arrayCards, className, positionLeft, mainPlayer, name = "" }) => {
+const SinglePlayer = ({ className, positionLeft, mainPlayer, player }) => {
   const containerCards = positionLeft ? 'order-2' : '';
   const containerImage = positionLeft ? 'order-1' : '';
   const MainPlayer = mainPlayer ? 'flex flex-col' : '';
   const overflowX = mainPlayer ? 'flex-nowrap max-w-[300px]' : '';
 
-  const primeiraLetra = name[0].toUpperCase();
+  const primeiraLetra = player.name[0].toUpperCase();
 
   return (
     <section className={` flex flex-row justify-center items-center ${className} ${MainPlayer}`} >
       <div className={`${containerCards}`} >
-        <ContainerCards arrCards={exArr} className={`${overflowX}`} />
-        <SumCards sumOfCards={13} />
+        <ContainerCards arrCards={player.cards} className={`${overflowX}`} />
+        <SumCards sumOfCards={player.valueA11 <= 21 ? player.valueA11 : player.valueA1} />
       </div>
 
       <div className={`flex flex-col items-center gap-x-1 ${containerImage} `} >
-        <BetChips valueBet={100} />
+        <BetChips valueBet={player.bet} />
         <div className="flex flex-row bg-NTblue px-4 py-2 rounded-full" >
           <p className="text-BJblack font-bold text-2xl" >{primeiraLetra}</p>
           {/* <ImagePlayer /> */}

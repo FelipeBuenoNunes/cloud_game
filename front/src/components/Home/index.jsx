@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../Header';
+import { useUser } from '../../providers/user';
+
 // import imageDragon from '/assets/image-dragon.png'
 // style={{ backgroundImage: `url(/assets/image-dragon.png)` }} 
 
@@ -15,6 +17,7 @@ const Home = () => {
   const { userName, id } = useParams();
   const [balance, setBalance] = useState('');
   const [name, setName] = useState('');
+  const { setBueno } = useUser();
 
 
   useEffect(() => {
@@ -36,8 +39,8 @@ const Home = () => {
     })
       .then(res => res.json())
       .then(result => {
-        console.log(result);
         setName(result.name);
+        setBueno(result.name);
         // localStorage.setItem('token', result.token);
       })
       .catch(err => setError(err.message));

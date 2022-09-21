@@ -115,7 +115,7 @@ export class logicGame {
             players.push(await playerGameToFront(this.players));
             this.players = this.players.next!;
         }
-        this.actionPlayer(40);
+        //this.actionPlayer(40);
         return {
             isRunning: true,
             playerTurn: players[0].name,
@@ -146,7 +146,7 @@ export class logicGame {
         this.hasCard();
 
         const currentPlayer = this.players;
-        const next = this.nextPlayer();
+        const next = await this.nextPlayer();
         return {
             playerGame: await playerGameToFront(currentPlayer),
             nextPlayerName: next ? this.players.name : ""
@@ -175,8 +175,8 @@ export class logicGame {
         return [isNaN(num) ? 10 : num];
     }
 
-    private nextPlayer() {
-        this.actionPlayer(5);
+    private async nextPlayer() {
+        await this.actionPlayer(5);
         if (!this.players.finished) return true;
         this.players = this.players.next!;
         if(this.players.finished) {
@@ -196,7 +196,7 @@ export class logicGame {
         this.players.bet *= 2; //double bet
 
         const currentPlayer = this.players;
-        const next = this.nextPlayer();
+        const next = await this.nextPlayer();
         return {
             playerGame: await playerGameToFront(currentPlayer),
             nextPlayerName: next ? this.players.name : ""
@@ -204,11 +204,11 @@ export class logicGame {
     }
 
     public async stop(userId: string): Promise<nextPlayer> {
-        if (this.players.finished) throw "User cannot get card";
-        if (this.players.id !== userId) throw "User cannot get card now";
+        if (this.players.finished) throw "user cannot stop now";
+        if (this.players.id !== userId) throw "user cannot stop now";
 
         this.players.finished = true;
-        const next = this.nextPlayer();
+        const next = await this.nextPlayer();
         return {
             nextPlayerName: next ? this.players.name : ""
         }
@@ -306,6 +306,7 @@ export class logicGame {
     private async actionPlayer(seconds: number) {
         clearTimeout(this.timeToActionPlayer);
         const roomId = (await sessionServices.getWithCookie(this.players.id))?.get().gameSessionId!
+        console.log((await sessionServices.getWithCookie(this.players.id))?.get())
         this.timeToActionPlayer = setTimeout(() => {
             room.getRoomById(roomId)!.
                 stop(this.players.id);

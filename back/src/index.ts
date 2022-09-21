@@ -19,11 +19,11 @@ const server = app.listen(
     () => console.log(`http://localhost:${config.PORT}`)
 );
 
-setInterval(() => console.log(process.memoryUsage().heapUsed / 1024 / 1024), 10000)
+//setInterval(() => console.log(process.memoryUsage().heapUsed / 1024 / 1024), 10000)
 
 server.on('upgrade', async (request, socket, head) => {
     const cookie = request.headers["sec-websocket-protocol"];
-    console.log(cookie);
+
     if (
         cookie === undefined ||
         typeof cookie !== "string" ||
