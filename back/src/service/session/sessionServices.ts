@@ -47,7 +47,6 @@ export default class sessionServices {
     private refreshCookie() {
         const timeSession = (this.session.inGame) ? (24*60)*60 : 5*60
         this.expires = Date.now() + (24*60)*60*1000;
-        console.log(this.expires);
         return timeSession;
     }
 
