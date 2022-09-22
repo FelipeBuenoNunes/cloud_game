@@ -15,17 +15,7 @@ const Table = ({ route, children }) => {
   const nameUser = useUser().bueno;
   //const { itemId, otherParam } = route.params;
   const [dealerHand, setDealerHand] = useState([
-    ["A", "H"],
-    ["A", "H"],
-    ["A", "S"],
-    ["A", "C"],
-    ["A", "D"],
-    ["A", "H"],
-    ["A", "S"],
-    ["A", "C"],
-    ["A", "D"],
-    ["A", "H"],
-    ["A", "S"],
+
   ]);
   const [main, setMain] = useState(undefined);
   const [players, setPlayers] = useState(new Map());
