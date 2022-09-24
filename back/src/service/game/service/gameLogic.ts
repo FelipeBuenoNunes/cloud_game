@@ -8,6 +8,7 @@ import { playerBet } from "../models/game/playerBet";
 import { playerGame } from "../models/game/playerGame";
 import { playerGameToFront, playerToFront } from "../models/game/playerToFront";
 import { resultPlayers } from "../models/game/result";
+import { errorMessage, InsufficientMoney } from "../models/messageServer/errorMessage";
 import { gameMessage } from "../models/messageServer/gameRunMessage";
 import { getCardResponse } from "../models/messageServer/getCard"
 import { nextPlayer } from "../models/messageServer/nextPlayer";
@@ -185,10 +186,11 @@ export class logicGame {
         return !this.players.finished;
     }
 
-    public async doubleBet(userId: string): Promise<getCardResponse> {
+    public async doubleBet(userId: string): Promise<getCardResponse | errorMessage> {
         if (this.players.finished) throw "User cannot get card";
         if (this.players.id !== userId) throw "User cannot get card now";
         if (this.players.cards.length > 2) throw "User cannot double bet";
+        if (!await this.couldDoBet(this.players.id, (this.players.bet*2))) return InsufficientMoney
 
         this.players.cards.push(this.deckCards.pop()!); //add new card
         this.updateHand();

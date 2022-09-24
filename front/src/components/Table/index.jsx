@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Component, useEffect, useState } from 'react';
 import { Header } from '../Header';
 import { ContainerDealer, ContainerPlayer, ContainerButtons } from './elements';
 import { useUser } from '../../providers/user';
@@ -41,11 +41,15 @@ const Table = ({ route, children }) => {
   functionsWs.set("stop", (data) => {
     console.log(data.name);
   })
+
+  functionsWs.set("error", (data) => {
+    alert(data); //error criar um jeito de mostrar ao usuario e tratar a msg (colocar em pt-br)
+  })
   
   functionsWs.set("finish_game", (data) => {
     const result = wsMethods.finishGame(data)
     setDealerHand(result.dealer.cards);
-    alert(`name: ${result.whoWon.name}, whoWon: ${result.whoWon.whoWon}`)
+    alert(`name: ${result.whoWon.name}, whoWon: ${result.whoWon.whoWon}`) //Finish game, MODAL
   })
 
 
@@ -54,13 +58,14 @@ const Table = ({ route, children }) => {
     ws.binaryType = "blob";
 
     ws.onopen = () => {
-      ws.send(JSON.stringify(startRound));
+      
       setWebSocket(ws);
     }
 
     ws.onmessage = (message) => {
       const event = JSON.parse(message.data)
-      if (event.name !== "first_data" && event.name !== "new_card" && event.name !== "finish_game") return;
+      console.log(event)
+      if (event.name !== "first_data" && event.name !== "new_card" && event.name !== "finish_game" && event.name !== "stop" && event.name !== "error") return;
       functionsWs.get(event.name)(event.data);
     }
 
@@ -81,6 +86,7 @@ const Table = ({ route, children }) => {
           <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify({ "name": "stop" })) }} >stop</button>
           <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify({ "name": "get_card" })) }} >hit</button>
           <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify({ "name": "double_bet" })) }} >double</button>
+          <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify(startRound)) }} >bet</button>
         </section>
       </section>
     </>

@@ -5,6 +5,7 @@ export class webSocketMethods {
     setName = (name) => this.#mainName = name;
 
     firstData(data) {
+        console.log("data: ", data)
         let main;
         const players = [];
         const names = [];
@@ -18,6 +19,19 @@ export class webSocketMethods {
 
         this.#mainPlayer = main;
         this.#players = players;
+        console.log("old: ", this.#mainPlayer)
+        if(!this.#mainPlayer) {
+            this.#mainPlayer = {
+                cards: [],
+                name: this.#mainName,
+                bet: 0,
+                valueA11: 0,
+                valueA1: 0,
+                finished: true
+            }
+            main = this.#mainPlayer
+            console.log("new: ", this.#mainPlayer)
+        }
         
         return { dealer: data.dealer, main: main, players: players, namePlayers: names }
     }

@@ -3,6 +3,7 @@ import { Tochinko } from "../../contract/tochinko";
 import sessionServices from "../../session/sessionServices";
 import { playerBet } from "../models/game/playerBet";
 import { errorMessage, InsufficientMoney } from "../models/messageServer/errorMessage";
+import { getCardResponse } from "../models/messageServer/getCard";
 import { patternMessage } from "../models/messageServer/patterResponse";
 import { ISocket } from "../models/wSocket";
 import { logicGame } from "./gameLogic";
@@ -40,7 +41,6 @@ export class room {
 
     private enter(user: ISocket): boolean {
         //If the room is full, close the connection
-        console.log(this.qtdPlayers)
         if (this.qtdPlayers >= 5) {
             user.close();
             return false
@@ -80,11 +80,12 @@ export class room {
 
     public async doubleBet(user: string) {
         const getCardResponse = await this.game.doubleBet(user);
+        if(getCardResponse === InsufficientMoney) return this.emitAll(getCardResponse as errorMessage)
         this.emitAll({
             name: "new_card",
             data: getCardResponse
         })
-        if(getCardResponse.nextPlayerName === "") this.finishRound();
+        if((getCardResponse as getCardResponse).nextPlayerName === "") this.finishRound();
     }
 
     public async stop(user: string) {

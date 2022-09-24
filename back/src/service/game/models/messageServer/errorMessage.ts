@@ -1,6 +1,7 @@
 export interface errorMessage {
-    "name": string
+    "name": string,
+    "data": string
 }
 
 export const 
-    InsufficientMoney: errorMessage = {name: "Insufficient money"}
+    InsufficientMoney: errorMessage = {name: "error", data: "Insufficient money"}
