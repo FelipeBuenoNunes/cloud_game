@@ -27,7 +27,7 @@ const loadImageCards = (arr) => {
 
     return (
       <>
-        <div className="min-w-[33px] max-w-[40px] md:max-w-[66px]">
+        <div key={index} className="min-w-[33px] max-w-[40px] md:max-w-[66px]">
           <img key={index} src={`${pathImage}`} className='md:max-h-24 object-contain' ></img >
         </div>
         {array.length <= 1 &&

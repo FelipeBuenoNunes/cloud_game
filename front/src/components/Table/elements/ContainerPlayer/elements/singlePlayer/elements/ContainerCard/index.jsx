@@ -23,7 +23,7 @@ const loadImageCards = (arr) => {
     const pathImage = `./assets/cards/${suit}/${nameCard}`;
 
     return (
-      <div className="min-w-[33px] w-[33px] h-[53px]">
+      <div key={index} className="min-w-[33px] w-[33px] h-[53px]">
         <img key={index} src={`${pathImage}`} className='object-contain' ></img >
       </div>
     );

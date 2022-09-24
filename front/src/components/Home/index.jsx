@@ -3,15 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Header } from '../Header';
 import { useUser } from '../../providers/user';
 
-// import imageDragon from '/assets/image-dragon.png'
-// style={{ backgroundImage: `url(/assets/image-dragon.png)` }} 
-
-// body: JSON.stringify(credentials),
-// headers: new Headers({
-//   'Content-Type': 'application/json'
-// })
-
-
 const Home = () => {
   const navigation = useNavigate();
   const { userName, id } = useParams();
@@ -63,20 +54,21 @@ const Home = () => {
   };
 
   return (
-    // #ffdab9
-    <section className='bg-BJgreen01 w-screen h-screen relative' >
+    <section className='bg-BJgreen01 w-full h-screen' >
       <Header className={`h-[5%] md:h-[10%]`} />
 
       <button
         className='text-5xl leading-[3px] text-white absolute top-0 right-2 md:leading-10'
         onClick={() => {
           activeMenu === false ? setActiveMenu(true) : setActiveMenu(false)
-        }} >...</button>
+        }} >
+        ...
+      </button>
 
-      <div className={`${activeMenu === true ? 'flex' : 'hidden'} absolute top-0 left-0  flex flex-col justify-center items-center z-10  w-screen h-screen backdrop-blur-sm bg-black/90`} >
-        <div className='w-[50vh] h-[50vh] bg-BJgreen01/60 relative flex flex-col justify-center items-center gap-y-8 ' >
+      <div className={` InfoModal ${activeMenu === true ? 'flex' : 'hidden'} absolute top-0 left-0  flex flex-col justify-center items-center z-10  w-screen h-screen backdrop-blur-sm bg-black/90`} >
+        <div className=' Container w-[50vh] h-[50vh] bg-BJgreen01/60 relative flex flex-col justify-center items-center gap-y-8 ' >
           <button
-            className='absolute top-0 right-0 bg-red-500 w-[10%] h-[10%]'
+            className=' ButtonClose absolute top-0 right-0 bg-red-500 w-[10%] h-[10%]'
             onClick={() => {
               activeMenu === false ? setActiveMenu(true) : setActiveMenu(false)
             }}
@@ -84,7 +76,7 @@ const Home = () => {
             X
           </button>
 
-          <div className='bg-BJbrown text-white text-3xl w-[80%] px-4 py-2 gap-y-4 rounded-lg ' >
+          <div className=' ContentText bg-BJbrown text-white text-3xl w-[80%] px-4 py-2 gap-y-4 rounded-lg ' >
             <p>balance: {balance}</p>
             <p>name: {name}</p>
           </div>
@@ -100,9 +92,9 @@ const Home = () => {
 
 
 
-          <div className='backdrop-blur-[2px] bg-black/20 w-[50vh] h-[50vh] max-w-[90%] flex flex-col justify-center items-center gap-y-8' >
+          <div className=' ContainerContent backdrop-blur-[2px] bg-black/20 w-[50vh] h-[50vh] max-w-[90%] flex flex-col justify-center items-center gap-y-8' >
             <h1 className=' text-BJwhite font-bold text-4xl' >Dragon Jack</h1>
-            <button className='bg-NTgreenDark text-BJwhite font-bold text-3xl rounded-lg px-4 py-2' onClick={() => { navigation('/table') }} >JOGAR</button>
+            <button className=' PlayButton bg-NTgreenDark text-BJwhite font-bold text-3xl rounded-lg px-4 py-2' onClick={() => { navigation('/table') }} >JOGAR</button>
           </div>
 
         </div>
@@ -110,5 +102,4 @@ const Home = () => {
     </section >
   )
 }
-// bg-gradient-to-r from-green-300 via-green-500 to-green-700
 export { Home };
