@@ -1,11 +1,8 @@
-import { useUser } from "./user";
-
 export class webSocketMethods {
     #players;
     #mainPlayer;
     #mainName;
     setName = (name) => this.#mainName = name;
-
 
     firstData(data) {
         let main;

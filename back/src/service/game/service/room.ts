@@ -69,7 +69,7 @@ export class room {
         try {
             const getCardResponse = await this.game.getCard(user);
             this.emitAll({
-                name: "get_card",
+                name: "new_card",
                 data: getCardResponse
             });
             if(getCardResponse.nextPlayerName === "") this.finishRound();
@@ -81,19 +81,19 @@ export class room {
     public async doubleBet(user: string) {
         const getCardResponse = await this.game.doubleBet(user);
         this.emitAll({
-            name: "get_card",
+            name: "new_card",
             data: getCardResponse
         })
         if(getCardResponse.nextPlayerName === "") this.finishRound();
     }
 
     public async stop(user: string) {
-        const getCardResponse = await this.game.stop(user);
+        const stopResponse = await this.game.stop(user);
         this.emitAll({
-            name: "get_card",
-            data: getCardResponse
+            name: "stop",
+            data: stopResponse
         })
-        if(getCardResponse.nextPlayerName  === "") this.finishRound();
+        if(stopResponse.nextPlayerName  === "") this.finishRound();
     }
     
     private emitAll<Type>(message: patternMessage<Type>) {
@@ -113,7 +113,6 @@ export class room {
 
     public exit(idUser: string): boolean {
         //Is it empty? if yes, kill the room
-        console.log("MERDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         if (this.qtdPlayers === 1) return room.rooms.delete(this.id);
         for (const index in this.users) {
             if (this.users[index].idUser !== idUser) continue;

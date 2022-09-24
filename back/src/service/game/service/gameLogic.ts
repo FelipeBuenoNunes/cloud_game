@@ -269,13 +269,13 @@ export class logicGame {
     }
 
     private minDealer() {
+        let valueCardPlayer = 0;
         for (let i = 0; i < this.qtdPlayers; i++) {
-            const v11 = (this.players.valueA11 <= 21);
-            const v1 = (this.players.valueA1 <= 21);
-            if (v11 || v1) return 17;
+            const valuePlayer = (this.players.valueA11 <= 21) ? this.players.valueA11 : this.players.valueA1
+            if(valuePlayer <= 21 && valuePlayer > valueCardPlayer) valueCardPlayer = valuePlayer;
             this.players = this.players.next!;
         }
-        return 0;
+        return (valueCardPlayer >= 17) ? 17 : valueCardPlayer;
     }
 
     private dealerContinues(minDealer: number): boolean {
