@@ -1,10 +1,9 @@
 const exArr = [
-  ["A-", "C"],
-  ["A-", "E"],
-  ["A-", "P"],
-  ["A-", "O"],
+  ["A", "H"],
+  ["A", "S"],
+  ["A", "C"],
+  ["A", "D"],
 ]
-
 const ContainerCards = ({ arrCards, className }) => {
   return (
     <section className={`max-h-[100px] flex flex-row flex-wrap justify-center items-center overflow-auto border-2 border-red-500 ${className}`} >
@@ -24,7 +23,7 @@ const loadImageCards = (arr) => {
     const pathImage = `./assets/cards/${suit}/${nameCard}`;
 
     return (
-      <div className="min-w-[33px] max-w-[33px] h-[53px]">
+      <div className="min-w-[33px] w-[33px] h-[53px]">
         <img key={index} src={`${pathImage}`} className='object-contain' ></img >
       </div>
     );

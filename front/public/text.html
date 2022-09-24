@@ -1,0 +1,96 @@
+<!-- codigo do felipe vicentini para concetar web sockter front to back -->
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="index.css">
+        <title>Minimlist chat App</title>
+    </head>
+
+    <body>
+        <div id="logged-users"></div>
+        <div class="container">
+            <p class="msg">Messages:</p>
+            <div id="messages" class="messages"></div>
+                <form id="msgForm" class="msgForm">
+                <input type="text" placeholder="Send message" class="input" id="inputBox"/>
+                <input type="submit" class="btn" value="Send">
+                <input type="text" placeholder="private to" class="input" id="privateTo" />
+            </form>
+        </div>
+
+        <script type="text/javascript">
+            
+            // pass the address localhost:8080 as the wss address
+            const ws = new WebSocket(`wss://${window.document.location.host}`);
+
+            ws.binaryType = "blob";
+            
+            // Log socket opening and closing
+            ws.addEventListener("open", event => {
+                console.log("Websocket connection opened");
+            });
+            
+            ws.addEventListener("close", event => {
+                console.log("Websocket connection closed");
+            });
+
+            ws.onmessage = function(event){
+                const msgDiv=document.createElement('div');
+                const userDiv=document.getElementById('logged-users');
+
+
+                
+                msgDiv.classList.add('msgCtn');
+                
+                if (event.data instanceof Blob) {
+                    reader = new FileReader();
+                    reader.onload = () => {
+                        const data = JSON.parse(reader.result)
+
+                        if (data.event = "message") {
+                            msgDiv.innerHTML = data.message;
+                            document.getElementById('messages').appendChild(msgDiv);
+                        }
+
+                    };
+                    reader.readAsText(JSON.parse(event.data.message));
+                } else {
+                    console.log('aqui ' + event.data)
+                    const data = JSON.parse(event.data);
+                    if (data.event === "message") {
+                        console.log("Result2: " + data.message);
+                        msgDiv.innerHTML = data.message;
+                        document.getElementById('messages').appendChild(msgDiv);
+                    }
+                    if (data.event === 'login') {
+                        userDiv.innerHTML = `<p>${data.message}</p>`
+                    }
+
+                }
+            }
+
+            const form = document.getElementById('msgForm');
+
+            form.addEventListener('submit',(event) => {
+                event.preventDefault();
+                const messageText=document.getElementById('inputBox').value;
+                let messageTo;
+                if (document.getElementById('privateTo').value === ''){
+                    messageTo = 'all'
+                }else{
+                    messageTo = document.getElementById('privateTo').value
+                }
+                const message = `{"event": "message", "message": "${messageText}", "to": "${messageTo}"}`
+                ws.send(message);
+                document.getElementById('inputBox').value=''
+            })
+
+        </script>
+
+    </body>
+
+</html>
