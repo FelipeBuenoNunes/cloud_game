@@ -8,9 +8,7 @@ const Table = ({ route, children }) => {
   const nameUser = useUser().bueno;
   wsMethods.setName(nameUser);
   //const { itemId, otherParam } = route.params;
-  const [dealerHand, setDealerHand] = useState([
-
-  ]);
+  const [dealerHand, setDealerHand] = useState([]);
   const [main, setMain] = useState(undefined);
   const [players, setPlayers] = useState([]);
   const [namePlayers, setNamePlayers] = useState([]);
@@ -41,14 +39,17 @@ const Table = ({ route, children }) => {
     console.log(data.name);
   })
 
+  // criar modal pequeno (baixo esquerda ou direita)
   functionsWs.set("error", (data) => {
-    alert(data); //error criar um jeito de mostrar ao usuario e tratar a msg (colocar em pt-br)
+    console.log(`erro data = ${data}`); //error criar um jeito de mostrar ao usuario e tratar a msg (colocar em pt-br)
   })
 
   functionsWs.set("finish_game", (data) => {
     const result = wsMethods.finishGame(data)
     setDealerHand(result.dealer.cards);
-    alert(`name: ${result.whoWon.name}, whoWon: ${result.whoWon.whoWon}`) //Finish game, MODAL
+    console.log(`name: ${result.whoWon.name}, whoWon: ${result.whoWon.whoWon}`) //Finish game, MODAL
+
+    data && setModalEndRound(true);
   })
 
 
@@ -77,6 +78,10 @@ const Table = ({ route, children }) => {
   }
 
   // BUTTONS
+  // acept only posit values
+  // get balance
+  // não deixar entrar com aposta zero, ou sem apostar
+  // o modal não esta ocerrendo no tempo de espera
   const ButtonSetBet = () => {
     const [valueInput, setValueInput] = useState('');
 
@@ -90,12 +95,12 @@ const Table = ({ route, children }) => {
 
           <div className='w-40 h-16 bg-blue-500 text-center font-bold text-2xl ' >balance: <br /> 12.000</div>
 
-          <input className='w-40 h-16 text-orange-400 font-bold text-3xl' type="number" placeholder='bet' value={valueInput} onInput={(e) => { setValueInput(Math.trunc(e.target.value)) }} />
+          <input className='w-40 h-16 text-orange-400 font-bold text-3xl' type="number" min="0" placeholder='bet' value={valueInput} onInput={(e) => { setValueInput(Math.trunc(e.target.value)) }} />
 
           <button
             className='w-40 h-16 bg-green-500 text-white text-2xl font-bold'
             onClick={() => {
-              setBet(false), webSocket.send(JSON.stringify({
+              setBet(false), setModalStartRound(true), webSocket.send(JSON.stringify({
                 name: "start_round",
                 data: valueInput
               }))
@@ -118,6 +123,53 @@ const Table = ({ route, children }) => {
     );
   };
 
+  // so pra saber o nome dos states
+  // const [modalStartRound, setModalStartRound] = useState(false);
+  // const [modalEndRound, setModalEndRound] = useState(false);
+  const ModalStart = () => {
+
+    useEffect(() => {
+      modalStartRound === true
+        &&
+        setTimeout(() => {
+          setModalStartRound(false);
+        }, 3000);
+    }, [modalStartRound]);
+
+    return (
+      <section className='' >
+        <div className={` InfoModal ${modalStartRound === true ? 'flex' : 'hidden'} absolute top-0 left-0  flex flex-col justify-center items-center z-10  w-screen h-screen backdrop-blur-sm bg-black/90`} >
+          <div className=' Container w-[50vh] h-[50vh] bg-BJgreen01/60 relative flex flex-col justify-center items-center gap-y-8 ' >
+            <p className='text-white font-bold text-2xl' >the game will start soon</p>
+          </div>
+        </div>
+      </section>
+    );
+  };
+
+  const ModalEnd = () => {
+    useEffect(() => {
+      modalEndRound === true
+        &&
+        setTimeout(() => {
+          setModalEndRound(false);
+          setBet(true);
+        }, 3000);
+    }, [modalEndRound]);
+
+    return (
+      <section className='' >
+        <div className={` InfoModal ${modalEndRound === true ? setTimeout(() => {
+          return 'flex'
+        }, 2000) : 'hidden'} absolute top-0 left-0  flex flex-col justify-center items-center z-10  w-screen h-screen backdrop-blur-sm bg-black/90`} >
+          <div className=' Container w-[50vh] h-[50vh] bg-BJgreen01/60 relative flex flex-col justify-center items-center gap-y-8 ' >
+            <p className='text-white font-bold text-2xl' >informar o vencedor</p>
+          </div>
+        </div>
+      </section>
+    )
+  };
+
   useEffect(() => {
     connectWS();
   }, []);
@@ -129,18 +181,15 @@ const Table = ({ route, children }) => {
         <ContainerDealer className={`h-[10%] md:h-[15%] md:mb-16`} arrCards={dealerHand} />
         <ContainerPlayer main={main} p1={players[0]} p2={players[1]} p3={players[2]} p4={players[3]} className={`h-`} />
 
-
-
-        {/* <ContainerButtons className={`h-[5%] md:h-[10%]`} wsSend={(wsSend)} /> */}
-
-        {/* {bet && <ButtonSetBet />} */}
-
         {bet
           ?
           <ButtonSetBet />
           :
           <ButtonGetCards />
         }
+
+        <ModalStart />
+        <ModalEnd />
 
       </section>
     </>

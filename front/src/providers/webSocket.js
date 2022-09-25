@@ -33,6 +33,7 @@ export class webSocketMethods {
             console.log("new: ", this.#mainPlayer)
         }
         
+        console.log(`player = ${JSON.stringify(players)} \n main = ${JSON.stringify(main)}`)
         return { dealer: data.dealer, main: main, players: players, namePlayers: names }
     }
 
