@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 // APENAS PARA TESTEES
 import { Header } from '../Header';
+import { parse } from '@ethersproject/transactions';
 
 // não funciona o navigation('/');
 
@@ -13,7 +14,7 @@ const LoginCadastro = () => {
   const [sign, setSign] = useState('login');
   const [name, setName] = useState('');
 
-  let navigation = useNavigate();
+  const navigation = useNavigate();
 
   const handleChange = event => {
     setName(event.target.value);
@@ -25,7 +26,6 @@ const LoginCadastro = () => {
 
   const login = (
     <section className=" bg-BJgreen01 w-screen h-screen flex flex-col justify-center items-center" >
-      {/* <Header /> */}
 
       <div
         style={{ backgroundImage: `url(/assets/image-dragon.png)`, backgroundRepeat: "no-repeat", backgroundSize: 'cover' }}
@@ -42,9 +42,6 @@ const LoginCadastro = () => {
             <p className="text-[#eee]" >Cadastrar</p>
           </button>
         </div>
-
-
-        {/* <button onClick={() => { navigation('/') }} >home</button> */}
 
         {error && erroDiv}
 
@@ -74,9 +71,6 @@ const LoginCadastro = () => {
           {error && erroDiv}
         </div>
 
-
-
-
       </div>
     </section>
   );
@@ -98,11 +92,13 @@ const LoginCadastro = () => {
             'Content-Type': 'application/json'
           })
         })
-          .then(res => res.status === 200 ? navigation('/') : console.log('nao deu bom'))
+          .then(res => res)
           .then(result => {
             if (result) {
-              const personalWallet = result.personalWallet
-              navigation(`/${personalWallet}`);
+              console.log('result', result)
+              // const userName = result.name;
+              // console.log('userName', userName);
+              // navigation(`/home/${userName}`);
             }
             // localStorage.setItem('token', result.token);
           });
@@ -122,9 +118,9 @@ const LoginCadastro = () => {
             'Content-Type': 'application/json'
           })
         })
-          .then(res => res.status === 200 ? navigation('/') : console.log('não deu bom o cadastro'))
+          .then(res => res.status === 200 ? console.log('registro status 200') : console.log('não deu bom o cadastro'))
           .then(result => {
-            console.log(result);
+            console.log('result', result);
             // localStorage.setItem('token', result.token);
           })
           .catch(err => setError(err.message));

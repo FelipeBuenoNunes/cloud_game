@@ -6,7 +6,7 @@ const Page404 = () => {
     <section className="w-screen h-screen flex flex-col justify-center items-center" >
       <div className=" bg-white w-[50vh] h-[50vh] max-w-[90%] flex flex-col justify-center items-center gap-y-4"  >
         <h2>Pagina não encontrada</h2>
-        <button onClick={() => { navigation('/') }} className="bg-blue-500 rounded-md px-4 text-white ">Home</button>
+        <button onClick={() => { navigation('/login') }} className="bg-blue-500 rounded-md px-4 text-white ">login</button>
       </div>
     </section>
   );

@@ -9,15 +9,15 @@ import "./input.css";
 
 function App() {
   return (
-      <Router>
-        <Routes>
-          <Route path="/login" element={<LoginCadastro />} />
-          {/* <Route path="/:personalWallet" element={<Home />} /> */}
-          <Route path="/" element={<Home />} />
-          <Route path="/table" element={<Table />} />
-          <Route path="*" element={<Page404 />} />
-        </Routes>
-      </Router>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginCadastro />} />
+        {/* <Route path="/:personalWallet" element={<Home />} /> */}
+        <Route path="/home/:userName" element={<Home />} />
+        <Route path="/table" element={<Table />} />
+        <Route path="*" element={<Page404 />} />
+      </Routes>
+    </Router>
   );
 }
 

@@ -77,11 +77,17 @@ const Table = ({ route, children }) => {
     data: 100
   }
 
-  // BUTTONS
+  // MELHORIAS
   // acept only posit values
   // get balance
   // não deixar entrar com aposta zero, ou sem apostar
   // o modal não esta ocerrendo no tempo de espera
+  // retirar buttons no header
+  // colocar navigation  nos buttons header
+  // ele entra logo na home não no login
+  // tempo
+  // ordem dos player
+  // scroll hight width
   const ButtonSetBet = () => {
     const [valueInput, setValueInput] = useState('');
 
