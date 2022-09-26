@@ -308,10 +308,9 @@ export class logicGame {
     private async actionPlayer(seconds: number) {
         clearTimeout(this.timeToActionPlayer);
         const roomId = (await sessionServices.getWithCookie(this.players.id))?.get().gameSessionId!
-        console.log((await sessionServices.getWithCookie(this.players.id))?.get())
         this.timeToActionPlayer = setTimeout(() => {
-            room.getRoomById(roomId)!.
-                stop(this.players.id);
+            const _room = room.getRoomById(roomId);
+            if(_room) _room.stop(this.players.id);
             
         }, seconds*1000)
     }

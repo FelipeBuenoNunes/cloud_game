@@ -22,6 +22,7 @@ wsServer.on('connection', (socket: ISocket, req: IncomingMessage) => {
             const event = JSON.parse(message.toString());
             const currentRoom = room.getRoomById(socket.idRoom);
             if (!currentRoom) return socket.close();
+            console.log(event);
 
             if (!event.data) socket.emit(event.name, currentRoom)
             else socket.emit(event.name, currentRoom, event.data);
