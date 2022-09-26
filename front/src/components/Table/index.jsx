@@ -84,17 +84,6 @@ const Table = ({ route, children }) => {
     data: 100
   }
 
-  // MELHORIAS
-  // acept only posit values
-  // get balance
-  // não deixar entrar com aposta zero, ou sem apostar
-  // o modal não esta ocerrendo no tempo de espera
-  // retirar buttons no header
-  // colocar navigation  nos buttons header
-  // ele entra logo na home não no login
-  // tempo
-  // ordem dos player
-  // scroll hight width
   const ButtonSetBet = () => {
     get("/wallet/balance")
       .then(res => setBalance(res.balance))
@@ -155,8 +144,9 @@ const Table = ({ route, children }) => {
 
     return (
       <section className='' >
-        <div className={` InfoModal ${modalStartRound === true ? 'flex' : 'hidden'} absolute top-0 left-0  flex flex-col justify-center items-center z-10  w-screen h-screen backdrop-blur-sm bg-black/90`} >
-          <div className=' Container w-[50vh] h-[50vh] bg-BJgreen01/60 relative flex flex-col justify-center items-center gap-y-8 ' >
+        <div
+          className={` InfoModal ${modalStartRound === true ? 'flex' : 'hidden'} absolute top-0 left-0  flex flex-col justify-center items-center z-10  w-screen h-screen backdrop-blur-sm bg-[#222]`} >
+          <div className=' Container w-[50vh] h-[20vh] bg-BJgreen01 relative flex flex-col justify-center items-center gap-y-8 rounded-2xl'>
             <p className='text-white font-bold text-2xl' >Finalizando as apostas</p>
           </div>
         </div>
@@ -165,19 +155,28 @@ const Table = ({ route, children }) => {
   };
 
   const ModalEnd = () => {
+    const whoWon = {
+      "PLAYER": "VC VENCEU",
+      "DEALER": "VC PERDEU",
+      "DRAW": "EMPATE",
+    }
     useEffect(() => {
       if (modalEndRound)
         setTimeout(() => {
+          console.log('modalend round', modalEndRound);
           setModalEndRound(undefined);
           setBet(true);
         }, 5000);
     }, [modalEndRound]);
 
+
+
+
     return (
-      <section className='' >
+      <section>
         <div className={` InfoModal ${modalEndRound ? "flex" : 'hidden'} absolute top-0 left-0  flex flex-col justify-center items-center z-10  w-screen h-screen backdrop-blur-sm bg-black/90`} >
           <div className=' Container w-[50vh] h-[50vh] bg-BJgreen01/60 relative flex flex-col justify-center items-center gap-y-8 ' >
-            <p className='text-white font-bold text-2xl' >{modalEndRound && modalEndRound.whoWon}</p>
+            <p className='text-white font-bold text-2xl' >{modalEndRound && whoWon[modalEndRound.whoWon]}</p>
           </div>
         </div>
       </section>

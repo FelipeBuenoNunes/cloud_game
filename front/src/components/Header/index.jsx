@@ -11,12 +11,12 @@ const Header = ({ className }) => {
       <button onClick={() => { navigation(-1) }} >
         <img className="w-6 md:w-8" src={exit} alt="" />
       </button>
-      <button onClick={() => { console.log('button sound') }} >
+      {/* <button onClick={() => { console.log('button sound') }} >
         <img className="w-6 md:w-8" src={sound} alt="" />
       </button>
       <button onClick={() => { console.log('button help') }} >
         <img className="w-6 md:w-8" src={help} alt="" />
-      </button>
+      </button> */}
 
       {/* <div className=" ml-4 flex gap-x-4" >
         <button className="bg-BJblue01 h-6 w-12 rounded-md text-center " onClick={() => { navigation('/login') }} >login</button>

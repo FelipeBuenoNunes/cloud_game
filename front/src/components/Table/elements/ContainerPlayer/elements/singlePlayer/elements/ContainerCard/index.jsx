@@ -6,7 +6,8 @@ import Fade from 'react-reveal/Fade';
 
 const ContainerCards = ({ arrCards, className }) => {
   return (
-    <section className={` max-h-[100px] flex flex-row flex-wrap justify-center items-center overflow-auto border-2 border-red-500 ${className}`} >
+    <section
+      className={` max-h-[100px] flex flex-row flex-wrap justify-center items-center border-2 border-red-500 overflow-hidden ${className}`} >
       {arrCards && loadImageCards(arrCards)}
     </section>
   );
