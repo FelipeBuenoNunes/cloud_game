@@ -1,11 +1,12 @@
+import Fade from 'react-reveal/Fade';
+import 'animate.css';
+
 const bgBack = `${process.env.PUBLIC_URL}/assets/bg-back-card.png`;
 
 const ContainerDealer = ({ className, arrCards }) => {
   return (
     <section className={`bg-transparent max-w-[90%] mx-auto gap-x-2 flex  overflow-auto  ${className}`}>
-
       {arrCards && loadImageCards(arrCards)}
-
     </section>
   );
 };
