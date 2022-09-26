@@ -20,13 +20,15 @@ const Table = ({ route, children }) => {
   const [modalStartRound, setModalStartRound] = useState(false);
   const [modalEndRound, setModalEndRound] = useState(undefined);
 
+  const [clearTable, setClearTable] = useState(false);
+
   // state para aposta
   const [bet, setBet] = useState(false);
 
   const functionsWs = new Map();
 
   functionsWs.set("first_data", (data) => {
-    setModalStartRound(false)
+    setModalStartRound(false);
     const result = wsMethods.firstData(data);
     setMain(result.main);
     setPlayers(result.players);
@@ -71,7 +73,7 @@ const Table = ({ route, children }) => {
       functionsWs.get(event.name)(event.data);
     }
 
-    ws.onclose =() => {
+    ws.onclose = () => {
       navigation("/")
     }
 
@@ -105,26 +107,27 @@ const Table = ({ route, children }) => {
     }, [valueInput]);
 
     return (
-      <section className='flex flex-col justify-center items-center gap-y-4 ' >
-        <div className='flex flex-row justify-center items-center gap-x-4' >
+      <section className='w-full h-full bg-BJgreen01 flex jflex-col justify-center items-center absolute' >
+        <section className='flex flex-col justify-center items-center gap-y-4 ' >
+          <div className='flex flex-col justify-center items-center gap-y-4 md:flex-row md:gap-x-4' >
 
-          <div className='w-40 h-16 bg-blue-500 text-center font-bold text-2xl ' >balance: <br /> {balance} </div>
+            <div className='w-40 h-16 bg-blue-500 text-center font-bold text-2xl ' >balance: <br /> {balance} </div>
 
-          <input className='w-40 h-16 text-orange-400 font-bold text-3xl' type="number" min="0" max={balance || 0} placeholder='bet' value={valueInput} onInput={(e) => { setValueInput(Math.trunc(e.target.value)) }} />
+            <input className='w-40 h-16 text-orange-400 font-bold text-3xl' type="number" min="0" max={balance || 0} placeholder='bet' value={valueInput} onInput={(e) => { setValueInput(Math.trunc(e.target.value)) }} />
 
-          <button
-            className='w-40 h-16 bg-green-500 text-white text-2xl font-bold'
-            onClick={() => {
-              if (valueInput > balance) return;
-              setBet(false);
-              setModalStartRound(true);
-              webSocket.send(JSON.stringify({
-                name: "start_round",
-                data: valueInput
-              }))
-            }} >finalize bet</button>
-        </div>
-
+            <button
+              className='w-40 h-16 bg-green-500 text-white text-2xl font-bold'
+              onClick={() => {
+                if (valueInput > balance) return;
+                setBet(false);
+                setModalStartRound(true);
+                webSocket.send(JSON.stringify({
+                  name: "start_round",
+                  data: valueInput
+                }))
+              }} >finalize bet</button>
+          </div>
+        </section>
       </section>
     );
   };
@@ -141,9 +144,6 @@ const Table = ({ route, children }) => {
     );
   };
 
-  // so pra saber o nome dos states
-  // const [modalStartRound, setModalStartRound] = useState(false);
-  // const [modalEndRound, setModalEndRound] = useState(false);
   const ModalStart = () => {
 
     useEffect(() => {
@@ -188,12 +188,16 @@ const Table = ({ route, children }) => {
     connectWS();
   }, []);
 
+  get("/wallet/balance")
+    .then(res => setBalance(res.balance))
+    .catch(e => console.error(e))
+
   return (
     <>
       <section className="bg-boardMobile bg-no-repeat bg-cover object-contain bg-center w-screen h-screen flex flex-col md:bg-boardDesktop">
-        <Header className={`h-[5%] md:h-[10%]`} arr />
-        <ContainerDealer className={`h-[10%] md:h-[15%] md:mb-16`} arrCards={dealerHand} />
-        <ContainerPlayer main={main} p1={players[0]} p2={players[1]} p3={players[2]} p4={players[3]} className={`h-`} />
+        <Header className={`h-[5%]`} arr />
+        <ContainerDealer className={` md:mb-16`} arrCards={dealerHand} />
+        <ContainerPlayer balance={balance} main={main} p1={players[0]} p2={players[1]} p3={players[2]} p4={players[3]} className={`h-`} />
 
         {bet
           ?

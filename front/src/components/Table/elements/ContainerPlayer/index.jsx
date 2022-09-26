@@ -1,7 +1,8 @@
 import SinglePlayer from "./elements/singlePlayer";
 // import img from '../../assets/bg-game-desktop.png'
 
-const ContainerPlayer = ({ main, p1, p2, p3, p4, className }) => {
+const ContainerPlayer = ({ main, p1, p2, p3, p4, className, balance }) => {
+
   return (
     <section className={` w-full p-1 flex flex-col justify-end items-stretch ${className}`}>
       <div>
@@ -16,7 +17,7 @@ const ContainerPlayer = ({ main, p1, p2, p3, p4, className }) => {
       </div>
 
       <div className="flex flex-row justify-center items-center">
-        {main && <SinglePlayer mainPlayer={true} player={main} />}
+        {main && <SinglePlayer balance={balance} mainPlayer={true} player={main} />}
       </div>
     </section>
   );

@@ -1,12 +1,5 @@
 const bgBack = `${process.env.PUBLIC_URL}/assets/bg-back-card.png`;
 
-const exArr = [
-  ["A", "H"],
-  ["A", "S"],
-  ["A", "C"],
-  ["A", "D"],
-]
-
 const ContainerDealer = ({ className, arrCards }) => {
   return (
     <section className={`bg-transparent max-w-[90%] mx-auto gap-x-2 flex  overflow-auto  ${className}`}>
