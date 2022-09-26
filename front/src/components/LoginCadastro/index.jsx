@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 // APENAS PARA TESTEES
 import { Header } from '../Header';
 import { parse } from '@ethersproject/transactions';
+import { useUser } from '../../providers/user';
+import { get } from '../../functions/req';
 
 // não funciona o navigation('/');
 
@@ -13,6 +15,13 @@ const LoginCadastro = () => {
   const [wallet, setWallet] = useState('');
   const [sign, setSign] = useState('login');
   const [name, setName] = useState('');
+  const setBueno = useUser().setBueno;
+
+
+  const setContext = async () => {
+    const res = await get("/infos");
+    setBueno(res.name);
+  }
 
   const navigation = useNavigate();
 
@@ -92,16 +101,13 @@ const LoginCadastro = () => {
             'Content-Type': 'application/json'
           })
         })
-          .then(res => res)
-          .then(result => {
-            if (result) {
-              console.log('result', result)
-              // const userName = result.name;
-              // console.log('userName', userName);
-              // navigation(`/home/${userName}`);
+          .then(async res => {
+            if (res.status === 200) {
+              await setContext()
+              navigation('/home');
             }
-            // localStorage.setItem('token', result.token);
-          });
+            else console.log("erro no login");
+          })
       })
       .catch(err => setError(err.message));
   }
@@ -118,13 +124,15 @@ const LoginCadastro = () => {
             'Content-Type': 'application/json'
           })
         })
-          .then(res => res.status === 200 ? console.log('registro status 200') : console.log('não deu bom o cadastro'))
-          .then(result => {
-            console.log('result', result);
-            // localStorage.setItem('token', result.token);
+          .then(async res => {
+            if (res.status === 200) {
+              await setContext()
+              navigation('/home');
+            }
+            else console.log("erro no login");
           })
           .catch(err => setError(err.message));
-      });
+      }).catch(err => setError(err.message));
   }
 
   async function connect(value) {
