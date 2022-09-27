@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 // APENAS PARA TESTEES
 import { Header } from '../Header';
+import { parse } from '@ethersproject/transactions';
+import { useUser } from '../../providers/user';
+import { get } from '../../functions/req';
 
 // não funciona o navigation('/');
 
@@ -12,8 +15,15 @@ const LoginCadastro = () => {
   const [wallet, setWallet] = useState('');
   const [sign, setSign] = useState('login');
   const [name, setName] = useState('');
+  const setBueno = useUser().setBueno;
 
-  let navigation = useNavigate();
+
+  const setContext = async () => {
+    const res = await get("/infos");
+    setBueno(res.name);
+  }
+
+  const navigation = useNavigate();
 
   const handleChange = event => {
     setName(event.target.value);
@@ -24,19 +34,23 @@ const LoginCadastro = () => {
   const erroDiv = <div>{error}</div>
 
   const login = (
-    <section className=" bg-gradient-to-r from-green-100 to-white   w-screen h-screen flex flex-col justify-center items-center" >
-      <Header />
-      <div className="bg-gradient-to-r from-green-300 via-green-500 to-green-700 w-[50vh] h-[50vh] max-w-[90vw] gap-y-8 flex flex-col justify-center items-center rounded-lg" >
-        <h3 className="text-[#333] font-semibold text-3xl" >Login</h3>
-        <button onClick={() => { doSignIn() }} className="bg-black h-8 text-white rounded-md w-[50%] text-xl" >Entrar</button>
+    <section className=" bg-BJgreen01 w-screen h-screen flex flex-col justify-center items-center" >
 
-        <hr className="w-[40%] border border-black" />
+      <div
+        style={{ backgroundImage: `url(/assets/image-dragon.png)`, backgroundRepeat: "no-repeat", backgroundSize: 'cover' }}
+        className=" text-white w-[50vh] h-[50vh] max-w-[90vw] gap-y-8 flex flex-col justify-center items-center rounded-lg" >
 
-        <button onClick={() => { setSign('cadastro') }} >
-          <p className="text-[#eee]" >Cadastrar</p>
-        </button>
+        <div className='backdrop-blur-[2px] bg-black/80 w-full h-full flex flex-col justify-center items-center gap-y-8' >
 
-        <button onClick={() => { navigation('/') }} >home</button>
+          <h3 className="text-white font-semibold text-4xl" >Login</h3>
+          <button onClick={() => { doSignIn() }} className="bg-NTgreenDark h-8 text-white rounded-md w-[50%] text-xl" >Entrar</button>
+
+          <hr className="w-[40%] border border-green-400" />
+
+          <button onClick={() => { setSign('cadastro') }} >
+            <p className="text-[#eee]" >Cadastrar</p>
+          </button>
+        </div>
 
         {error && erroDiv}
 
@@ -45,19 +59,26 @@ const LoginCadastro = () => {
   );
 
   const cadastro = (
-    <section className=" bg-gradient-to-r from-green-100 to-white   w-screen h-screen flex flex-col justify-center items-center" >
-      <div className="bg-gradient-to-r from-green-300 via-green-500 to-green-700 w-[50vh] h-[50vh] max-w-[90vw] gap-y-8 flex flex-col justify-center items-center rounded-lg" >
-        <h3 className="text-[#333] font-semibold text-3xl" >Cadastrar</h3>
-        <input value={name} onChange={handleChange} type="text" placeholder="Name" className="rounded-sm text-2xl w-[50%]" />
-        <button onClick={() => { doSignUp() }} className="bg-black h-8 text-white rounded-md w-[50%] text-xl" >Cadastrar</button>
+    <section className=" bg-BJgreen01  w-screen h-screen flex flex-col justify-center items-center" >
+      <div
+        style={{ backgroundImage: `url(/assets/image-dragon.png)`, backgroundRepeat: "no-repeat", backgroundSize: 'cover' }}
+        className="w-[50vh] h-[50vh] max-w-[90vw] gap-y-8 flex flex-col justify-center items-center rounded-lg"
+      >
 
-        <hr className="w-[40%] border border-black" />
+        <div className='backdrop-blur-[2px] bg-black/80 flex flex-col justify-center items-center gap-y-8 w-full h-full' >
 
-        <button onClick={() => { setSign('login') }} >
-          <p className="text-[#eee]" >Login</p>
-        </button>
+          <h3 className="text-white font-semibold text-3xl" >Cadastrar</h3>
+          <input value={name} onChange={handleChange} type="text" placeholder="Name" className="rounded-sm text-2xl w-[50%]" />
+          <button onClick={() => { doSignUp() }} className="bg-NTgreenDark h-8 text-white rounded-md w-[50%] text-xl" >Cadastrar</button>
 
-        {error && erroDiv}
+          <hr className="w-[40%] border border-green-400" />
+
+          <button onClick={() => { setSign('login') }} >
+            <p className="text-[#eee]" >Login</p>
+          </button>
+
+          {error && erroDiv}
+        </div>
 
       </div>
     </section>
@@ -80,14 +101,13 @@ const LoginCadastro = () => {
             'Content-Type': 'application/json'
           })
         })
-          .then(res => res.status === 200 ? navigation('/') : console.log('nao deu bom'))
-          .then(result => {
-            if (result) {
-              const personalWallet = result.personalWallet
-              navigation(`/${personalWallet}`);
+          .then(async res => {
+            if (res.status === 200) {
+              await setContext()
+              navigation('/home');
             }
-            // localStorage.setItem('token', result.token);
-          });
+            else console.log("erro no login");
+          })
       })
       .catch(err => setError(err.message));
   }
@@ -104,13 +124,15 @@ const LoginCadastro = () => {
             'Content-Type': 'application/json'
           })
         })
-          .then(res => res.status === 200 ? navigation('/') : console.log('não deu bom o cadastro'))
-          .then(result => {
-            console.log(result);
-            // localStorage.setItem('token', result.token);
+          .then(async res => {
+            if (res.status === 200) {
+              await setContext()
+              navigation('/home');
+            }
+            else console.log("erro no login");
           })
           .catch(err => setError(err.message));
-      });
+      }).catch(err => setError(err.message));
   }
 
   async function connect(value) {

@@ -8,21 +8,21 @@ const Header = ({ className }) => {
   const navigation = useNavigate();
   return (
     <section className={`bg-gradient-to-r from-[#9a031e] to-BJblack mb-1 px-4 py-2 gap-x-1 flex flex-row justify-start items-center  ${className}`} >
-      <button onClick={() => { navigation('/') }} >
+      <button onClick={() => { navigation(-1) }} >
         <img className="w-6 md:w-8" src={exit} alt="" />
       </button>
-      <button onClick={() => { console.log('button sound') }} >
+      {/* <button onClick={() => { console.log('button sound') }} >
         <img className="w-6 md:w-8" src={sound} alt="" />
       </button>
       <button onClick={() => { console.log('button help') }} >
         <img className="w-6 md:w-8" src={help} alt="" />
-      </button>
+      </button> */}
 
-      <div className=" ml-4 flex gap-x-4" >
+      {/* <div className=" ml-4 flex gap-x-4" >
         <button className="bg-BJblue01 h-6 w-12 rounded-md text-center " onClick={() => { navigation('/login') }} >login</button>
         <button className="bg-BJblue01 h-6 w-12 rounded-md text-center " onClick={() => { navigation('/') }} >home</button>
         <button className="bg-BJblue01 h-6 w-12 rounded-md text-center " onClick={() => { navigation('/table') }} >table</button>
-      </div>
+      </div> */}
     </section>
   );
 };

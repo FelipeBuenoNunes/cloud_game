@@ -8,6 +8,7 @@ import { playerBet } from "../models/game/playerBet";
 import { playerGame } from "../models/game/playerGame";
 import { playerGameToFront, playerToFront } from "../models/game/playerToFront";
 import { resultPlayers } from "../models/game/result";
+import { errorMessage, InsufficientMoney } from "../models/messageServer/errorMessage";
 import { gameMessage } from "../models/messageServer/gameRunMessage";
 import { getCardResponse } from "../models/messageServer/getCard"
 import { nextPlayer } from "../models/messageServer/nextPlayer";
@@ -185,10 +186,11 @@ export class logicGame {
         return !this.players.finished;
     }
 
-    public async doubleBet(userId: string): Promise<getCardResponse> {
+    public async doubleBet(userId: string): Promise<getCardResponse | errorMessage> {
         if (this.players.finished) throw "User cannot get card";
         if (this.players.id !== userId) throw "User cannot get card now";
         if (this.players.cards.length > 2) throw "User cannot double bet";
+        if (!await this.couldDoBet(this.players.id, (this.players.bet*2))) return InsufficientMoney
 
         this.players.cards.push(this.deckCards.pop()!); //add new card
         this.updateHand();
@@ -269,13 +271,13 @@ export class logicGame {
     }
 
     private minDealer() {
+        let valueCardPlayer = 0;
         for (let i = 0; i < this.qtdPlayers; i++) {
-            const v11 = (this.players.valueA11 <= 21);
-            const v1 = (this.players.valueA1 <= 21);
-            if (v11 || v1) return 17;
+            const valuePlayer = (this.players.valueA11 <= 21) ? this.players.valueA11 : this.players.valueA1
+            if(valuePlayer <= 21 && valuePlayer > valueCardPlayer) valueCardPlayer = valuePlayer;
             this.players = this.players.next!;
         }
-        return 0;
+        return (valueCardPlayer >= 17) ? 17 : valueCardPlayer;
     }
 
     private dealerContinues(minDealer: number): boolean {
@@ -306,10 +308,9 @@ export class logicGame {
     private async actionPlayer(seconds: number) {
         clearTimeout(this.timeToActionPlayer);
         const roomId = (await sessionServices.getWithCookie(this.players.id))?.get().gameSessionId!
-        console.log((await sessionServices.getWithCookie(this.players.id))?.get())
         this.timeToActionPlayer = setTimeout(() => {
-            room.getRoomById(roomId)!.
-                stop(this.players.id);
+            const _room = room.getRoomById(roomId);
+            if(_room) _room.stop(this.players.id);
             
         }, seconds*1000)
     }

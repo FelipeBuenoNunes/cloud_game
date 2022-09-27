@@ -18,13 +18,17 @@ wsServer.on('connection', (socket: ISocket, req: IncomingMessage) => {
         });
 
     socket.on('message', message => {
-        console.log(message)
-        const event = JSON.parse(message.toString());
-        const currentRoom = room.getRoomById(socket.idRoom);
-        if (!currentRoom) return socket.close();
+        try {
+            const event = JSON.parse(message.toString());
+            const currentRoom = room.getRoomById(socket.idRoom);
+            if (!currentRoom) return socket.close();
+            console.log(event);
 
-        if (!event.data) socket.emit(event.name, currentRoom)
-        else socket.emit(event.name, currentRoom, event.data);
+            if (!event.data) socket.emit(event.name, currentRoom)
+            else socket.emit(event.name, currentRoom, event.data);
+        } catch (e) {
+            console.error(e);
+        }
     })
 
     socket.on("start_round", async (currentRoom: room, value: any) => {
@@ -35,29 +39,29 @@ wsServer.on('connection', (socket: ISocket, req: IncomingMessage) => {
             name: socket.name,
             bet: num
         })
-        if(error) socket.send(JSON.stringify(error));
+        if (error) socket.send(JSON.stringify(error));
     })
 
     socket.on("get_card", async (currentRoom: room) => {
-        try{
+        try {
             await currentRoom.getCard(socket.idUser);
-        }catch(e) {
+        } catch (e) {
             socket.emit("close")
         }
     })
 
     socket.on("double_bet", async (currenRoom: room) => {
-        try{
+        try {
             await currenRoom.doubleBet(socket.idUser);
-        } catch(e) {
+        } catch (e) {
             socket.emit("close")
         }
     })
 
-    socket.on("stop",async (currentRoom: room) => {
+    socket.on("stop", async (currentRoom: room) => {
         try {
             await currentRoom.stop(socket.idUser)
-        }catch(e) {
+        } catch (e) {
             socket.emit("close")
         }
     })

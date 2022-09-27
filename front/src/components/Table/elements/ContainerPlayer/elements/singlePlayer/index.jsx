@@ -14,7 +14,7 @@ const exArr = [
 
 ]
 
-const SinglePlayer = ({ className, positionLeft, mainPlayer, player }) => {
+const SinglePlayer = ({ className, positionLeft, mainPlayer, player, balance }) => {
   const containerCards = positionLeft ? 'order-2' : '';
   const containerImage = positionLeft ? 'order-1' : '';
   const MainPlayer = mainPlayer ? 'flex flex-col' : '';
@@ -35,7 +35,7 @@ const SinglePlayer = ({ className, positionLeft, mainPlayer, player }) => {
           <p className="text-BJblack font-bold text-2xl" >{primeiraLetra}</p>
           {/* <ImagePlayer /> */}
         </div>
-        <Chips value="12.000" />
+        <Chips value={balance} />
       </div>
     </section>
   );
