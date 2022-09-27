@@ -58,7 +58,7 @@ const Table = ({ route, children }) => {
   })
 
   const connectWS = () => {
-    const ws = new WebSocket(`ws://localhost:8080`, document.cookie.split("=")[1]);
+    const ws = new WebSocket(process.env.REACT_APP_WS, document.cookie.split("=")[1]);
     ws.binaryType = "blob";
 
     ws.onopen = () => {
@@ -83,13 +83,14 @@ const Table = ({ route, children }) => {
     name: "start_round",
     data: 100
   }
-
+  
+  //state value input (bet)
+  const [valueInput, setValueInput] = useState('');
   const ButtonSetBet = () => {
     get("/wallet/balance")
       .then(res => setBalance(res.balance))
       .catch(e => console.error(e))
 
-    const [valueInput, setValueInput] = useState('');
 
     useEffect(() => {
       console.log(valueInput)
@@ -156,9 +157,9 @@ const Table = ({ route, children }) => {
 
   const ModalEnd = () => {
     const whoWon = {
-      "PLAYER": "VC VENCEU",
-      "DEALER": "VC PERDEU",
-      "DRAW": "EMPATE",
+      "PLAYER": `Você ganhou  ${valueInput}`,
+      "DEALER": `Você perdeu  ${valueInput} `,
+      "DRAW": `Empatou  ${valueInput} foi devolvido`,
     }
     useEffect(() => {
       if (modalEndRound)

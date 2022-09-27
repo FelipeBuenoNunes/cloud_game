@@ -5,6 +5,7 @@ import Table from "./components/Table";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import "./input.css";
 import { useUser } from "./providers/user";
+import { get } from "./functions/req";
 
 const Private = ({ children }) => {
   const user = useUser().bueno;
@@ -16,13 +17,20 @@ const Private = ({ children }) => {
   }
 };
 
-
+const Public = ({ children }) => {
+  if(document.cookie.split("=")[1]) {
+    const { setBueno } = useUser();
+    get("/infos").then(res => setBueno(res))
+    return <Navigate to="/home" />
+  }
+  return children
+};
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LoginCadastro />} />
+        <Route path="/" element={<Public> <LoginCadastro /> </Public>} />
         <Route path="*" element={<Page404 />} />
         <Route path="/home" element={<Private> <Home /> </Private>} />
         <Route path="/table" element={<Private> <Table /> </Private>} />

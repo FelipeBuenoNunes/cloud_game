@@ -13,15 +13,6 @@ const Home = () => {
   const [activeMenu, setActiveMenu] = useState(false);
   const [buyChips, setBuyChips] = useState(false);
 
-  // useEffect(() => {
-  //   if (buyChips) {
-  //     setInterval(() => {
-  //       setBuyChips(false);
-  //     }, 2000);
-  //   }
-
-  // }, [buyChips]);
-
   const getBalance = async () => {
     return get("/wallet/balance")
       .then(result => {
