@@ -93,7 +93,7 @@ const LoginCadastro = () => {
     connect('login')
       .then(credentials => {
         console.log(credentials);
-        fetch('http://localhost:8080/login', {
+        fetch(process.env.REACT_APP_URL + '/login', {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(credentials),
@@ -116,7 +116,7 @@ const LoginCadastro = () => {
   function doSignUp() {
     connect('cadastro')
       .then(credentials => {
-        fetch('http://localhost:8080/new-user', {
+        fetch(process.env.REACT_APP_URL+'/new-user', {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(credentials),
@@ -138,7 +138,7 @@ const LoginCadastro = () => {
   async function connect(value) {
     let response;
     try {
-      response = await fetch('http://localhost:8080/get-message', {
+      response = await fetch(process.env.REACT_APP_URL+'/get-message', {
         credentials: 'include',
       });
     } catch (err) {

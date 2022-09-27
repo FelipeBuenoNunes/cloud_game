@@ -6,6 +6,7 @@ dotenv.config();
 const config = {
     //HTTP
     PORT: process.env.SERVER_PORT,
+    CONFIG_CORS: process.env.CONFIG_CORS || "http://localhost:3000",
     //POSTGRES
     POSTGRES_USER: process.env.POSTGRES_USER,
     POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,

@@ -16,7 +16,7 @@ AppDataSource.initialize()
 
 const server = app.listen(
     config.PORT,
-    () => console.log(`http://localhost:${config.PORT}`)
+    () => console.log(`server: ${config.PORT}`)
 );
 
 //setInterval(() => console.log(process.memoryUsage().heapUsed / 1024 / 1024), 10000)

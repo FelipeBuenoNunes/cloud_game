@@ -5,11 +5,12 @@ import cookieParser from "cookie-parser"
 import { errorDefault } from "./http/middleware/errorDefault";
 import swaggerUI from "swagger-ui-express";
 import configSwagger from "./swagger";
+import { config } from "./dotenv";
 
 const app = express();
 
 const corsConfiguration = {
-    "origin": "http://localhost:3000",
+    "origin": config.CONFIG_CORS,
     "credentials": true
 }
 

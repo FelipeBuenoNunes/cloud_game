@@ -79,11 +79,6 @@ const Table = ({ route, children }) => {
 
   };
 
-  const startRound = {
-    name: "start_round",
-    data: 100
-  }
-  
   //state value input (bet)
   const [valueInput, setValueInput] = useState('');
   const ButtonSetBet = () => {
@@ -91,31 +86,28 @@ const Table = ({ route, children }) => {
       .then(res => setBalance(res.balance))
       .catch(e => console.error(e))
 
-
-    useEffect(() => {
-      console.log(valueInput)
-    }, [valueInput]);
-
     return (
       <section className='w-full h-full bg-BJgreen01 flex jflex-col justify-center items-center absolute' >
         <section className='flex flex-col justify-center items-center gap-y-4 ' >
           <div className='flex flex-col justify-center items-center gap-y-4 md:flex-row md:gap-x-4' >
 
-            <div className='w-40 h-16 bg-blue-500 text-center font-bold text-2xl ' >balance: <br /> {balance} </div>
+            <div className='w-40 h-16 bg-blue-500 text-center font-bold text-2xl ' >Saldo: <br /> {balance} </div>
 
-            <input className='w-40 h-16 text-orange-400 font-bold text-3xl' type="number" min="0" max={balance || 0} placeholder='bet' value={valueInput} onInput={(e) => { setValueInput(Math.trunc(e.target.value)) }} />
+            <input className='w-40 h-16 text-orange-400 font-bold text-3xl' id="value-bet" type="number" min="1" defaultValue="50" max={balance || 0} placeholder='aposta' />
 
             <button
               className='w-40 h-16 bg-green-500 text-white text-2xl font-bold'
               onClick={() => {
-                if (valueInput > balance) return;
+                const valueInput = parseInt(document.getElementById('value-bet').value);
+                if (valueInput > balance || valueInput < 0) return;
+                setValueInput(valueInput)
                 setBet(false);
                 setModalStartRound(true);
                 webSocket.send(JSON.stringify({
                   name: "start_round",
                   data: valueInput
                 }))
-              }} >finalize bet</button>
+              }} >Finalizar aposta</button>
           </div>
         </section>
       </section>
@@ -126,9 +118,9 @@ const Table = ({ route, children }) => {
   const ButtonGetCards = () => {
     return (
       <section className={`w-full mx-auto p-4 bg-transparent flex flex-row justify-center items-center gap-x-1 text-BJwhite font-medium text-center text-2xl md:text-4xl [&>*]:bg-BJbrown`} >
-        <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify({ "name": "stop" })) }} >stop</button>
-        <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify({ "name": "get_card" })) }} >hit</button>
-        <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify({ "name": "double_bet" })) }} >double</button>
+        <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify({ "name": "stop" })) }} >parar</button>
+        <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify({ "name": "get_card" })) }} >pedir</button>
+        <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify({ "name": "double_bet" })) }} >dobrar</button>
         {/* <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify(startRound)) }} >bet</button> */}
       </section>
     );
