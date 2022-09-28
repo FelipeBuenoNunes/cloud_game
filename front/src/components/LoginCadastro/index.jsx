@@ -11,11 +11,27 @@ import { get } from '../../functions/req';
 // não funciona o navigation('/');
 
 const LoginCadastro = () => {
+  const url = "https://metamask.io/download/";
   const [error, setError] = useState('');
   const [wallet, setWallet] = useState('');
-  const [sign, setSign] = useState('login');
+  const [sign, setSign] = useState('cadastro');
   const [name, setName] = useState('');
   const setBueno = useUser().setBueno;
+
+  const isMetaMaskInstalled = () => {
+    const { ethereum } = window;
+    const isInstalled = Boolean(ethereum && ethereum.isMetaMask);
+    if (!isInstalled) {
+      console.log(
+        "Please install the MetaMask extension! Then you can procede to use the app."
+      );
+      window.alert('Por favor instale a MetaMask para fazer login!')
+      // setError(
+      //   "Please install the MetaMask extension! Then you can procede to use the app."
+      // );
+    }
+    return isInstalled;
+  };
 
 
   const setContext = async () => {
@@ -31,7 +47,7 @@ const LoginCadastro = () => {
     console.log('value is:', event.target.value);
   };
 
-  const erroDiv = <div>{error}</div>
+  const erroDiv = <div className='text-white font-bold text-base' >{error}</div>
 
   const login = (
     <section className=" bg-BJgreen01 w-screen h-screen flex flex-col justify-center items-center" >
@@ -50,10 +66,10 @@ const LoginCadastro = () => {
           <button onClick={() => { setSign('cadastro') }} >
             <p className="text-[#eee]" >Cadastrar</p>
           </button>
+
+          {error && erroDiv}
+
         </div>
-
-        {error && erroDiv}
-
       </div>
     </section>
   );
@@ -116,7 +132,7 @@ const LoginCadastro = () => {
   function doSignUp() {
     connect('cadastro')
       .then(credentials => {
-        fetch(process.env.REACT_APP_URL+'/new-user', {
+        fetch(process.env.REACT_APP_URL + '/new-user', {
           method: 'POST',
           credentials: 'include',
           body: JSON.stringify(credentials),
@@ -138,7 +154,7 @@ const LoginCadastro = () => {
   async function connect(value) {
     let response;
     try {
-      response = await fetch(process.env.REACT_APP_URL+'/get-message', {
+      response = await fetch(process.env.REACT_APP_URL + '/get-message', {
         credentials: 'include',
       });
     } catch (err) {
@@ -151,7 +167,10 @@ const LoginCadastro = () => {
 
     setError('');
 
-    if (!window.ethereum) return setError('No MetaMask found!');
+    if (!isMetaMaskInstalled()) {
+      window.open(url, "_blank", "noopener,noreferrer");
+      return;
+    }
 
     const provider = new ethers.providers.Web3Provider((window).ethereum);
     const accounts = await provider.send('eth_requestAccounts', []);
@@ -171,7 +190,10 @@ const LoginCadastro = () => {
     return { personalWallet: accounts[0], password, userName: name }
   }
 
+
+
 }
+
 
 
 export { LoginCadastro };

@@ -1,10 +1,22 @@
-import { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Header } from '../Header';
 import { ContainerDealer, ContainerPlayer, ContainerButtons } from './elements';
 import { useUser } from '../../providers/user';
 import { wsMethods } from '../../providers/webSocket';
 import { get } from '../../functions/req';
 import { useNavigate } from 'react-router-dom';
+
+import ReactAudioPlayer from 'react-audio-player';
+import Sound from 'react-sound';
+import useSound from 'use-sound';
+
+
+import startSound from '../../assets/sounds/start.mp3';
+import winSound from '../../assets/sounds/win.mp3';
+import loseSound from '../../assets/sounds/lose.mp3';
+import loseAllSound from '../../assets/sounds/loseAll.mp3';
+import drawSound from '../../assets/sounds/draw.mp3';
+
 
 const Table = ({ route, children }) => {
   const navigation = useNavigate();
@@ -22,8 +34,57 @@ const Table = ({ route, children }) => {
 
   const [clearTable, setClearTable] = useState(false);
 
-  // state para aposta
+  // state para renderizar botão aposta
   const [bet, setBet] = useState(false);
+
+  //state value input (bet)
+  const [valueInput, setValueInput] = useState('');
+
+  // function sound
+  const [onSound, setOnSound] = useState(false);
+  // const PlaySound = (
+  //   urlSound
+  //   // handleSongLoading,
+  //   // handleSongPlaying,
+  //   // handleSongFinishedPlaying
+  // ) => {
+  //   const [isPlaying, setIsPlaying] = useState(false);
+  //   return (
+  //     <div>
+  //       <button
+  //         onclick={() => setIsPlaying(!isPlaying)}
+  //       >
+  //         {!isPlaying ? ' Play ' : ' Stop '}
+  //       </button>
+  //       <Sound
+  //         url={urlSound}
+  //         playStatus={isPlaying ? Sound.status.PLAYING : Sound.status.PLAYING}
+  //         playFromPosition={300}
+  //       // onLoading={handleSongLoading}
+  //       // onPlaying={handleSongPlaying}
+  //       // onFinishedPlaying={handleSongFinishedPlaying}
+  //       />
+
+  //     </div>
+  //   );
+  // }
+
+
+  // sound test
+  const arrSound = [startSound, winSound, loseSound, loseAllSound, drawSound];
+
+
+  const [start] = useSound(startSound);
+  const [win] = useSound(winSound);
+  const [lose] = useSound(loseSound);
+  const [loseAll] = useSound(loseAllSound);
+  const [draw] = useSound(drawSound);
+  // const BoopButton = () => {
+  //   return <button onClick={play}>Boop!</button>;
+  // };
+
+
+
 
   const functionsWs = new Map();
 
@@ -51,11 +112,28 @@ const Table = ({ route, children }) => {
 
   functionsWs.set("finish_game", (data) => {
     const result = wsMethods.finishGame(data)
+    // console.log(`data finish game = ${JSON.stringify(data)}`)
+    // console.log(`value aposta = ${data.dealerHand.value}`)
+    console.log('quem ganhou = ', result.whoWon.whoWon);
+    if (result.whoWon.whoWon === "PLAYER") {
+      console.log('som');
+      win();
+    }
+    if (result.whoWon.whoWon === "DEALER") {
+      console.log('som');
+      lose();
+    }
+    if (result.whoWon.whoWon === "DRAW") {
+      console.log('som');
+      draw();
+    }
     setDealerHand(result.dealer.cards);
     setTimeout(() => {
       setModalEndRound(result.whoWon);
     }, 2000)
   })
+
+
 
   const connectWS = () => {
     const ws = new WebSocket(process.env.REACT_APP_WS, document.cookie.split("=")[1]);
@@ -79,8 +157,7 @@ const Table = ({ route, children }) => {
 
   };
 
-  //state value input (bet)
-  const [valueInput, setValueInput] = useState('');
+
   const ButtonSetBet = () => {
     get("/wallet/balance")
       .then(res => setBalance(res.balance))
@@ -118,9 +195,25 @@ const Table = ({ route, children }) => {
   const ButtonGetCards = () => {
     return (
       <section className={`w-full mx-auto p-4 bg-transparent flex flex-row justify-center items-center gap-x-1 text-BJwhite font-medium text-center text-2xl md:text-4xl [&>*]:bg-BJbrown`} >
-        <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify({ "name": "stop" })) }} >parar</button>
-        <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify({ "name": "get_card" })) }} >pedir</button>
-        <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify({ "name": "double_bet" })) }} >dobrar</button>
+        <button
+          className=" active: max-w-[150px] w-[30%] "
+          onClick={() => { webSocket.send(JSON.stringify({ "name": "stop" })) }}
+        >
+          parar
+        </button>
+        <button
+          className="max-w-[150px] w-[30%] "
+          onClick={() => { webSocket.send(JSON.stringify({ "name": "get_card" })) }}
+        >
+          pedir
+        </button>
+        <button
+          disabled={balance < 2 * valueInput}
+          className=" disabled:opacity-50 max-w-[150px] w-[30%] "
+          onClick={() => { webSocket.send(JSON.stringify({ "name": "double_bet" })), setValueInput(2 * valueInput) }}
+        >
+          dobrar
+        </button>
         {/* <button className="max-w-[150px] w-[30%] " onClick={() => { webSocket.send(JSON.stringify(startRound)) }} >bet</button> */}
       </section>
     );
@@ -129,10 +222,12 @@ const Table = ({ route, children }) => {
   const ModalStart = () => {
 
     useEffect(() => {
-      if (modalStartRound)
-        setTimeout(() => {
-          setModalStartRound(false);
-        }, 20000);
+      if (modalStartRound) {
+        start();
+        // setTimeout(() => {
+        //   setModalStartRound(false);
+        // }, 20000);
+      }
     }, [modalStartRound]);
 
     return (
@@ -154,16 +249,16 @@ const Table = ({ route, children }) => {
       "DRAW": `Empatou  ${valueInput} foi devolvido`,
     }
     useEffect(() => {
-      if (modalEndRound)
+      // const result = wsMethods.finishGame(data)
+      if (modalEndRound) {
+        // console.log('quem ganhou = ', whoWon[modalEndRound.whoWon.whoWon]);
         setTimeout(() => {
           console.log('modalend round', modalEndRound);
           setModalEndRound(undefined);
           setBet(true);
         }, 5000);
+      }
     }, [modalEndRound]);
-
-
-
 
     return (
       <section>
@@ -182,7 +277,7 @@ const Table = ({ route, children }) => {
 
   get("/wallet/balance")
     .then(res => setBalance(res.balance))
-    .catch(e => console.error(e))
+    .catch(e => console.error(e));
 
   return (
     <>
@@ -200,6 +295,17 @@ const Table = ({ route, children }) => {
 
         <ModalStart />
         <ModalEnd />
+
+        {/* <ReactAudioPlayer
+          src="/songs/sounds/fichas-poker.mp3"
+          autoPlay
+          controls
+          listenInterval={40000}
+        /> */}
+
+        {/* <PlaySound urlSound="../../assets/sounds/fichas-poker.mp3" /> */}
+
+        {/* <BoopButton /> */}
 
       </section>
     </>

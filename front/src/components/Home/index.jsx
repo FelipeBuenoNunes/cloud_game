@@ -5,6 +5,13 @@ import { useUser } from '../../providers/user';
 import { get } from '../../functions/req'
 import { post } from '../../functions/req';
 
+// import useSound from 'use-sound';
+// import startSound from '../../assets/sounds/start.mp3';
+// import winSound from '../../assets/sounds/win.mp3';
+// import loseSound from '../../assets/sounds/lose.mp3';
+// import loseAllSound from '../../assets/sounds/loseAll.mp3';
+// import drawSound from '../../assets/sounds/draw.mp3';
+
 const Home = () => {
   const navigation = useNavigate();
   const [balance, setBalance] = useState('');
@@ -37,6 +44,12 @@ const Home = () => {
     post('/wallet/buy_token', { "amount": "100" })
       .then(res => res.success && getBalance())
       .catch(err => console.err(err));
+  };
+
+
+  const BoopButton = () => {
+    const [play] = useSound(arrSound[0]);
+    return <button onClick={play}>Boop!</button>;
   };
 
   return (
@@ -110,6 +123,7 @@ const Home = () => {
               JOGAR
             </button>
           </div>
+
 
         </div>
       </main>
