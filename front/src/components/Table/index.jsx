@@ -17,8 +17,6 @@ import loseAllSound from '../../assets/sounds/loseAll.mp3';
 import drawSound from '../../assets/sounds/draw.mp3';
 import cardSound from '../../assets/sounds/card.mp3'
 
-import bgTop from '../../assets/bg-top.png';
-
 
 const Table = ({ route, children }) => {
   const navigation = useNavigate();
@@ -93,6 +91,7 @@ const Table = ({ route, children }) => {
 
   functionsWs.set("first_data", (data) => {
     setModalStartRound(false);
+    setBet(false); 
     const result = wsMethods.firstData(data);
     setMain(result.main);
     setPlayers(result.players);
@@ -101,11 +100,14 @@ const Table = ({ route, children }) => {
 
   functionsWs.set("new_card", (data) => {
     const result = wsMethods.newCard(data);
-    result.isMain ? setMain(result.data) : setPlayers(result.data)
+    result.isMain && setMain(result.data);
+    setPlayers(result.players);
   })
 
   functionsWs.set("stop", (data) => {
-    console.log(data.name);
+    const result = wsMethods.stop(data);
+    setPlayers(result.players);
+    setMain(result.data);
   })
 
   // criar modal pequeno (baixo esquerda ou direita)
@@ -115,25 +117,23 @@ const Table = ({ route, children }) => {
 
   functionsWs.set("finish_game", (data) => {
     const result = wsMethods.finishGame(data)
-    // console.log(`data finish game = ${JSON.stringify(data)}`)
-    // console.log(`value aposta = ${data.dealerHand.value}`)
-    console.log('quem ganhou = ', result.whoWon.whoWon);
-    if (result.whoWon.whoWon === "PLAYER") {
-      console.log('som');
-      win();
+    console.log("result: ", result)
+    if(result.whoWon) {
+      if (result.whoWon.whoWon === "PLAYER") win();
+      else if (result.whoWon.whoWon === "DEALER") lose();
+      else if (result.whoWon.whoWon === "DRAW") draw();
+    }else {
+      setDealerHand(result.dealer.cards);
+      setTimeout(() => {
+        setBet(true);
+      }, 5000)
+      return;
     }
-    if (result.whoWon.whoWon === "DEALER") {
-      console.log('som');
-      lose();
-    }
-    if (result.whoWon.whoWon === "DRAW") {
-      console.log('som');
-      draw();
-    }
+
     setDealerHand(result.dealer.cards);
     setTimeout(() => {
       setModalEndRound(result.whoWon);
-    }, 2000)
+    }, 3000)
   })
 
 
@@ -268,7 +268,7 @@ const Table = ({ route, children }) => {
           console.log('modalend round', modalEndRound);
           setModalEndRound(undefined);
           setBet(true);
-        }, 5000);
+        }, 2000);
       }
     }, [modalEndRound]);
 

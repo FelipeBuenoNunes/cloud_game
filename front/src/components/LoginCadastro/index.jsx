@@ -13,9 +13,7 @@ import { get } from '../../functions/req';
 const LoginCadastro = () => {
   const url = "https://metamask.io/download/";
   const [error, setError] = useState('');
-  const [wallet, setWallet] = useState('');
-  const [sign, setSign] = useState('cadastro');
-  const [name, setName] = useState('');
+  let name = "";
   const setBueno = useUser().setBueno;
 
   const isMetaMaskInstalled = () => {
@@ -26,9 +24,6 @@ const LoginCadastro = () => {
         "Please install the MetaMask extension! Then you can procede to use the app."
       );
       window.alert('Por favor instale a MetaMask para fazer login!')
-      // setError(
-      //   "Please install the MetaMask extension! Then you can procede to use the app."
-      // );
     }
     return isInstalled;
   };
@@ -41,8 +36,6 @@ const LoginCadastro = () => {
 
   const navigation = useNavigate();
 
-  const handleChange = event => setName(event.target.value);
-
   const erroDiv = <div>{error}</div>
 
   const Left = () => {
@@ -52,7 +45,7 @@ const LoginCadastro = () => {
         <div className='border-2 w-[32rem] h-[24rem] border-[#1A1A32] rounded-3xl flex flex-col justify-center items-center'>
           {
             isCadaster ?
-              <input className='border-2 border-[#212121] w-[21rem] h-[4rem] text-[#212120] text-2xl font-bold rounded-[1.2rem] pl-4' type="text" placeholder='username' id="name-input" /> :
+              <input className='border-2 border-[#212121] w-[21rem] h-[4rem] text-[#212120] text-2xl font-bold rounded-[1.2rem] pl-4' type="text" placeholder='username' id="name-input" onChange={(e) => name = e.target.value} /> :
               <button className='bg-[#1A1A32] w-[21rem] h-[4rem] text-white text-3xl font-bold rounded-[1.2rem]' onClick={() => { doSignIn() }}>Logar</button>
           }
           <button className='mb-3 bg-[#1A1A32] w-[21rem] h-[4rem] text-white text-3xl font-bold rounded-[1.2rem] mt-9' onClick={() => {
@@ -110,7 +103,6 @@ const LoginCadastro = () => {
 
 
   function doSignUp() {
-    if (document.getElementById('name-input').value.length < 4) return;
     connect('cadastro')
       .then(credentials => {
         fetch(process.env.REACT_APP_URL + '/new-user', {
@@ -156,19 +148,13 @@ const LoginCadastro = () => {
     const accounts = await provider.send('eth_requestAccounts', []);
     if (!accounts || !accounts.length) return setError('Wallet not found/allowed!');
 
-    localStorage.setItem('wallet', accounts[0]);
-
-    setWallet(accounts[0]);
-
     const signer = provider.getSigner();
     const password = await signer.signMessage(SECRET);
 
-    if (value === 'login') {
-      return { personalWallet: accounts[0], password }
-    }
-    const name = document.getElementById('name-input').value;
+    if (value === 'login') return { personalWallet: accounts[0], password };
+    console.log("name? ", name)
     if (name.length < 4) return;
-    return { personalWallet: accounts[0], password, userName: name }
+    return { personalWallet: accounts[0], password, userName: name };
   }
 
 }
