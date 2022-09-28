@@ -28,6 +28,7 @@ const Table = ({ route, children }) => {
   const [players, setPlayers] = useState([]);
   const [webSocket, setWebSocket] = useState([]);
   const [balance, setBalance] = useState("");
+  const [currentPlayer, setCurrentPlayer] = useState("");
 
   const [modalStartRound, setModalStartRound] = useState(false);
   const [modalEndRound, setModalEndRound] = useState(undefined);
@@ -90,8 +91,9 @@ const Table = ({ route, children }) => {
   const functionsWs = new Map();
 
   functionsWs.set("first_data", (data) => {
+    setCurrentPlayer(data.playerTurn);
     setModalStartRound(false);
-    setBet(false); 
+    setBet(false);
     const result = wsMethods.firstData(data);
     setMain(result.main);
     setPlayers(result.players);
@@ -99,11 +101,13 @@ const Table = ({ route, children }) => {
   })
 
   functionsWs.set("new_card", (data) => {
+    setCurrentPlayer(data.nextPlayerName);
     const result = wsMethods.newCard(data);
     result.isMain ? setMain(result.data) : setPlayers(result.data)
   })
 
   functionsWs.set("stop", (data) => {
+    setCurrentPlayer(data.nextPlayerName);
     console.log(data.name);
   })
 
@@ -115,11 +119,11 @@ const Table = ({ route, children }) => {
   functionsWs.set("finish_game", (data) => {
     const result = wsMethods.finishGame(data)
     console.log("result: ", result)
-    if(result.whoWon) {
+    if (result.whoWon) {
       if (result.whoWon.whoWon === "PLAYER") win();
       else if (result.whoWon.whoWon === "DEALER") lose();
       else if (result.whoWon.whoWon === "DRAW") draw();
-    }else {
+    } else {
       setDealerHand(result.dealer.cards);
       setTimeout(() => {
         setBet(true);
@@ -205,19 +209,21 @@ const Table = ({ route, children }) => {
         className={`w-full mx-auto p-4 bg-transparent flex flex-row justify-center items-center gap-x-1 text-[#191931] font-medium text-center text-2xl md:text-4xl md:gap-x-10 [&>*]:bg-white`}
       >
         <button
-          className="w-[265px] h-[53px] flex justify-center items-center rounded-2xl "
+          disabled={nameUser !== currentPlayer}
+          className="disabled:opacity-50 w-[265px] h-[53px] flex justify-center items-center rounded-2xl "
           onClick={() => { webSocket.send(JSON.stringify({ "name": "stop" })) }}
         >
           parar
         </button>
         <button
-          className="w-[265px] h-[53px] flex justify-center items-center rounded-2xl "
+          disabled={nameUser !== currentPlayer}
+          className="disabled:opacity-50 w-[265px] h-[53px] flex justify-center items-center rounded-2xl "
           onClick={() => { webSocket.send(JSON.stringify({ "name": "get_card" })), card() }}
         >
           pedir
         </button>
         <button
-          disabled={balance < 2 * valueInput}
+          disabled={balance < 2 * valueInput || nameUser !== currentPlayer}
           className=" disabled:opacity-50 w-[265px] h-[53px] flex justify-center items-center rounded-2xl "
           onClick={() => { webSocket.send(JSON.stringify({ "name": "double_bet" })), setValueInput(2 * valueInput), card() }}
         >
