@@ -49,7 +49,7 @@ const Home = () => {
 
   return (
     <section className='w-full h-[100vh] flex'>
-      <div className='h-[100vh] bg-[#910023] w-[48%] flex justify-around flex-col items-center'>
+      <div className='h-[100vh] bg-[#910023] w-[48%] flex justify-around flex-col items-center rounded-r-[2rem]'>
         <div className='w-full flex justify-between px-20' >
           <button className='flex items-center text-white font-bold text-3xl' onClick={exitButton}>
             <img className="mr-3" src="/assets/arrow.svg" alt="arrow" />
