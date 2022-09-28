@@ -100,14 +100,11 @@ const Table = ({ route, children }) => {
 
   functionsWs.set("new_card", (data) => {
     const result = wsMethods.newCard(data);
-    result.isMain && setMain(result.data);
-    setPlayers(result.players);
+    result.isMain ? setMain(result.data) : setPlayers(result.data)
   })
 
   functionsWs.set("stop", (data) => {
-    const result = wsMethods.stop(data);
-    setPlayers(result.players);
-    setMain(result.data);
+    console.log(data.name);
   })
 
   // criar modal pequeno (baixo esquerda ou direita)
