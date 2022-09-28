@@ -15,20 +15,20 @@ services:
     networks:
       - app-network
 
-  pgadmin_pachinko:
-    container_name: pgadmin_pachinko
-    image: dpage/pgadmin4:latest
-    restart: always
-    env_file:
-      - .env
-    ports:
-      - "8888:88"
-    # volumes:
-    #   - pgadmin-data:/var/lib/pgadmin
-    depends_on:
-      - postgres_pachinko
-    networks:
-      - app-network
+  # pgadmin_pachinko:
+  #   container_name: pgadmin_pachinko
+  #   image: dpage/pgadmin4:latest
+  #   restart: always
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "8888:88"
+  #   # volumes:
+  #   #   - pgadmin-data:/var/lib/pgadmin
+  #   depends_on:
+  #     - postgres_pachinko
+  #   networks:
+  #     - app-network
 
   redisdb_pachinko:
     container_name: redisdb_pachinko

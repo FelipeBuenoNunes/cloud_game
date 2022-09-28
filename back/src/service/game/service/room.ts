@@ -14,7 +14,7 @@ export class room {
     //Join room and return id
     public static joinRoom(player: ISocket): string {
         for (let [_, currentRoom] of room.rooms) {
-            if (currentRoom.qtdPlayers < 5) {
+            if (currentRoom.qtdPlayers < 5 && !currentRoom.game.isGameRunning) {
                 currentRoom.enter(player);
                 return currentRoom.id;
             };

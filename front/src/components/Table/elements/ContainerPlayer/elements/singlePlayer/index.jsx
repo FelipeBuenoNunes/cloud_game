@@ -31,7 +31,7 @@ const SinglePlayer = ({ className, positionLeft, mainPlayer, player, balance }) 
 
       <div className={`flex flex-col items-center gap-x-1 ${containerImage} `} >
         <BetChips valueBet={player.bet} />
-        <div className="flex flex-row bg-NTblue px-4 py-2 rounded-full" >
+        <div className={`flex flex-row ${player.isCurrent ? "bg-[#148106]" : "bg-NTblue"} px-4 py-2 rounded-full`} >
           <p className="text-BJblack font-bold text-2xl" >{primeiraLetra}</p>
           {/* <ImagePlayer /> */}
         </div>

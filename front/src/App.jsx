@@ -18,9 +18,9 @@ const Private = ({ children }) => {
 };
 
 const Public = ({ children }) => {
-  if(document.cookie.split("=")[1]) {
+  if (document.cookie.split("=")[1]) {
     const { setBueno } = useUser();
-    get("/infos").then(res => setBueno(res))
+    setBueno('name')
     return <Navigate to="/home" />
   }
   return children
