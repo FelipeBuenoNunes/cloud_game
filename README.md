@@ -45,7 +45,7 @@ docker compose up
 ```
 
 > tip: This command may get an error if this happens, you could try running the following command.
-```docker compose up -dgi```
+```docker compose up```
 > If the error persists, consult the official documentation
 
 4 - on /back run:
